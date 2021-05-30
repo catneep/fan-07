@@ -1,0 +1,10 @@
+@page "/catalogo/{id}"
+
+@code{
+  [Parameter] public string id { get; set; }
+  
+  protected async override Task OnInitializedAsync()
+  {
+    //TODO: Integrar servicio de producto
+  }
+}
