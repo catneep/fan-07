@@ -1,24 +1,25 @@
 @inherits LayoutComponentBase
 
-<Navbar Links="Locations" Class="is-dark">
+@* <Navbar Links="Locations" Class="is-dark">
     <Logo>
         <img src="img/logo.png" width="112" height="28">
     </Logo>
     <End>
         <LoginDisplay />
     </End>
-</Navbar>
+</Navbar> *@
+<FanNavBar />
 <main>
     @Body
 </main>
 @* Footer *@
 
 @code{
-    List<string[]> Locations;
+    @* List<string[]> Locations;
     protected override void OnInitialized()
     {
         Locations = new List<string[]>();
         Locations.Add(new string[]{"Home" , "/"});
         Locations.Add(new string[]{"Catálogo" , "/catalogo"});
-    }
+    } *@
 }
