@@ -1,3 +1,5 @@
+@inherits AuthenticatedComponent
+@inject NavigationManager NavMgr
 <nav class="navbar is-info" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
@@ -22,11 +24,11 @@
       </div>
 
       <div class="buttons">
-        <button class="button is-outlined">
+        <button class="button is-outlined" >
           <span class="icon has-text-info oi" data-glyph="cart">
           </span>
         </button>
-        <button class="button is-outlined">
+        <button class="button is-outlined" @onclick="GoToRegister">
           <span class="icon has-text-info oi" data-glyph="person">
           </span>
         </button>
@@ -36,5 +38,12 @@
 </nav>
 
 @code{
-  
+  private void GoToRegister(){
+    if (_currentUser == null){
+      NavMgr.NavigateTo("/Identity/Account/Login");
+    } else {
+      NavMgr.NavigateTo("/Identity/Account/Manage/Index");
+    }
+  }
+
 }

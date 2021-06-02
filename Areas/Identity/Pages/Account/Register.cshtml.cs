@@ -61,6 +61,15 @@ namespace fan_07.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Nombre(s)")]
+            public string Nombres { get; set; }
+
+            [Required]
+            [Display(Name = "Apellido(s)")]
+            public string Apellidos { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -75,7 +84,12 @@ namespace fan_07.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    Nombres = Input.Nombres,
+                    Apellidos = Input.Apellidos
+                    };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
