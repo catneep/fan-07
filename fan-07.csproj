@@ -28,7 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\embers\Embers.csproj" />
+    <!--
+        <ProjectReference Include="..\embers\Embers.csproj" />
+    -->
+    
   </ItemGroup>
 
 </Project>
