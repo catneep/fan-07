@@ -40,9 +40,9 @@
 @code{
   private void GoToRegister(){
     if (_currentUser == null){
-      NavMgr.NavigateTo("/Identity/Account/Register");
+      NavMgr.NavigateTo("/Identity/Account/Register", true);
     } else {
-      NavMgr.NavigateTo("/Identity/Account/Manage/Index");
+      NavMgr.NavigateTo("/Identity/Account/Manage/Index", true);
     }
   }
 
