@@ -1,0 +1,26 @@
+#left{
+  height: fit-content;
+}
+
+#content{
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 0.5fr 8fr 0.5fr;
+  grid-template-areas:
+    "top"
+    "middle"
+    "bottom"
+  ;
+}
+
+#content > .level{
+  grid-area: top;
+}
+
+#content > #products{
+  grid-area: middle;
+}
+
+#content > nav{
+  grid-area: bottom;
+}

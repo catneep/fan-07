@@ -1,12 +1,78 @@
 @page "/catalogo"
-@page "/catalogo/{query}"
+@page "/catalogo/{index:int}"
+@page "/catalogo/search/{query}"
+
+<h1 class="title is-large">
+  Catálogo
+</h1>
+
+<div class="tile is-ancestor">
+  <div class="tile is-2 is-vertical is-parent" id="left">
+    <div class="tile is-child box">
+      <p class="title is-small">
+        Filtros
+      </p>
+      
+      <ProductFilters />
+
+    </div>
+  </div>
+
+  <div class="tile is-parent" id="right">
+    <div class="tile is-child box" id="content">
+      <div class="level">
+        <div class="level-left">
+          <p class="level-item">Mostrando @Productos.Count resultados</p>
+        </div>
+        <div class="level-right" id="orderCombo">
+          <label for="orderCombo" class="level-item">Ordernar por: </label>
+        <Dropdown Class="level-item" Placeholder="A-Z" Items="OrderItems" @ref="order" />
+        </div>
+      </div>
+
+      <section id="products" class="columns is-multiline is-mobile">
+        @for (int i = 0; i < 12; i++)
+        {
+          <div class="column is-3">
+            <Card Title="@i.ToString()" />
+          </div>
+        }
+      </section>
+
+      <Pagination Class="is-centered" PageCount="1" CurrentIndex="@index" RootLocation="catalogo" Tags="PageTags" />
+
+    </div>
+  </div>
+</div>
 
 @code{
   [Parameter] public string query {get; set;} = String.Empty;
+  [Parameter] public int index {get; set;} = 1;
+  private readonly string[] PageTags = {"Anterior", "Siguiente"};
+  private List<string> OrderItems;
+  private ProductFilters Filters;
+  private List<Producto> Productos;
+  private Dropdown order;
+
+  private void startOrderCombo()
+  {
+    OrderItems = new List<string>();
+    OrderItems.Add("A-Z");
+    OrderItems.Add("Z-A");
+    OrderItems.Add("Menor Precio");
+    OrderItems.Add("Mayor Precio");
+  }
+  private void getProducts()
+  {
+    Productos = new List<Producto>();
+  }
   protected async override Task OnInitializedAsync()
   {
-    if (query != String.Empty){
-      Console.WriteLine($"Searching for: {query}");
+    startOrderCombo();
+    getProducts();
+
+    if (query != String.Empty && query != ""){
+      Console.WriteLine($"Searching for: \"{query}\"");
     }
   }
 }

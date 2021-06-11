@@ -1,0 +1,48 @@
+<section id="combos">
+  <div id="comboGenero">
+    <label for="comboGenero">Género: </label>
+    <Dropdown @ref="Genero" Placeholder="Seleccionar" Items="Generos"/>
+  </div>
+
+  <div id="comboCategoria">
+    <label for="comboCategoria">Categoría: </label>
+    <Dropdown @ref="Categoria" Placeholder="Seleccionar" Items="Categorias"/>
+  </div>
+
+  <div id="comboSubcategoria">
+    <label for="comboSubcategoria">Subcategoría: </label>
+    <Dropdown @ref="Subcategoria" Placeholder="Seleccionar" Items="Subcategorias"/>
+  </div>
+</section>
+
+<section id="checks">
+
+</section>
+
+@code{
+  private Dropdown Genero, Categoria, Subcategoria;
+  [Parameter] public List<string> Generos {get; set;}
+  [Parameter] public List<string> Categorias {get; set;}
+  [Parameter] public List<string> Subcategorias {get; set;}
+
+  protected override void OnParametersSet()
+  {
+    if (Generos == null || Generos.Count == 0)
+    {
+      Generos = new List<string>();
+      Generos.Add("");
+    }
+    if (Categorias == null || Categorias.Count == 0)
+    {
+      Categorias = new List<string>();
+      Categorias.Add("");
+    }
+    if (Subcategorias == null || Subcategorias.Count == 0)
+    {
+      Subcategorias = new List<string>();
+      Subcategorias.Add("");
+    }
+    
+  }
+
+}

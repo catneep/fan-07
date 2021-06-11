@@ -1,0 +1,13 @@
+#combos > div{
+  width: 100%;
+}
+
+#combos label{
+  display: flex;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+#combos .dropdown{
+  width: 100%;
+}
