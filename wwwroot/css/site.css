@@ -56,6 +56,10 @@ a, .btn-link {
     color: red;
 }
 
+fieldset{
+    border: none;
+}
+
 #blazor-error-ui {
     background: rgb(255, 112, 112);
     bottom: 0;
