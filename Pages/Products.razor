@@ -1,7 +1,10 @@
 @page "/catalogo"
 @page "/catalogo/{index:int}"
+@page "/catalogo/filters/{filter}"
 @page "/catalogo/search/{query}"
 @page "/catalogo/search/{query}/{index:int}"
+
+@inject IProductService PrdtSrv
 
 <main>
   <h1 class="title is-large">
@@ -15,7 +18,7 @@
           Filtros
         </p>
         
-        <ProductFilters />
+        <ProductFilters @ref="Filters" />
 
       </div>
     </div>
@@ -50,6 +53,7 @@
 
 @code{
   [Parameter] public string query {get; set;} = String.Empty;
+  [Parameter] public string filter {get; set;}
   [Parameter] public int index {get; set;} = 1;
   private readonly string[] PageTags = {"Anterior", "Siguiente"};
   private string rootLocation = "catalogo";
@@ -66,25 +70,23 @@
     OrderItems.Add("Menor Precio");
     OrderItems.Add("Mayor Precio");
   }
-  private void getProducts()
+  private async Task getProducts()
   {
     Productos = new List<Producto>();
   }
   protected async override Task OnInitializedAsync()
   {
     startOrderCombo();
-    getProducts();
+    await getProducts();
 
-    if (query != null && query != String.Empty)
-    {
-      Console.WriteLine($"Searching for: \"{query}\"");
-    }
+    
   }
 
   protected async override Task OnParametersSetAsync()
   {
     if (query != null && query != String.Empty)
     {
+      Console.WriteLine($"Searching for: \"{query}\"");
       rootLocation = $"catalogo/search/{query}";
     }
   }
