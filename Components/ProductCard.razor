@@ -1,6 +1,6 @@
 @inject NavigationManager NavMgr
 
-<Card Title="@Producto.Nombre" Subtitle="@Producto.Precio">
+<Card Title="@Producto.Nombre" Subtitle='@($"${Producto.Precio.ToString()}")'>
   <p>@Producto.Descripcion</p>
   <br>
   <button class="button is-primary" @onclick="GoToProduct">
