@@ -19,7 +19,7 @@
       <div class="searchbar">
         <p class="control has-icons-left">
           <input
-            @bind-Value="_query"
+            @oninput="UpdateText"
             class="input"
             type="text"
             placeholder="Buscar"
@@ -46,6 +46,12 @@
 
 @code{
   public string _query { get; set; }
+
+  private void UpdateText(ChangeEventArgs e)
+  {
+      _query = e.Value.ToString();
+  }
+
   private void GoToRegister()
   {
     if (_currentUser == null){
@@ -62,7 +68,6 @@
 
   private void Search(KeyboardEventArgs e)
   {
-    Console.WriteLine($"Entered: {_query}");
     if (e.Code == "Enter" || e.Code == "NumpadEnter")
     {
       NavMgr.NavigateTo($"/catalogo/{_query}", true);
