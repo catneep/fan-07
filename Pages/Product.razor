@@ -1,17 +1,20 @@
 @page "/productos/{id}"
 @inject NavigationManager NavMgr
 @inject IProductService PrdtSrv
+@inject ICartService CartSrv
 
 <main class="content">
   <h1>
     @producto.Nombre
   </h1>
+
+  <button class="button" @onclick="AddToCart">Agregar al carrito</button>
+
 </main>
 
 @code{
   [Parameter] public string id { get; set; }
   private Producto producto;
-  
   protected async override Task OnParametersSetAsync()
   { 
     if (id != null && id != String.Empty)
@@ -33,6 +36,15 @@
         Precio = new decimal(1.2),
         Existencia = 1
       };
+  }
+
+  private void AddToCart(){
+    CartSrv.Productos.Add(
+      new CartItem{
+        Cantidad = 1,
+        Producto = producto
+      }
+    );
   }
 
 }

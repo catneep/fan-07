@@ -1,0 +1,17 @@
+@inject NavigationManager NavMgr
+
+<Card Title="@Producto.Nombre" Subtitle="@Producto.Precio">
+  <p>@Producto.Descripcion</p>
+  <br>
+  <button class="button is-primary" @onclick="GoToProduct">
+    Ver Detalles
+  </button>
+</Card>
+
+@code{
+  [Parameter] public Producto Producto {get; set;}
+  private void GoToProduct()
+  {
+    NavMgr.NavigateTo($"/productos/{Producto.Id.ToString()}");
+  }
+}
