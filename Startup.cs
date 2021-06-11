@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using fan_07.Areas.Identity;
 using fan_07.Data;
 using fan_07.Models;
+using fan_07.Services;
 
 namespace fan_07
 {
@@ -42,6 +43,9 @@ namespace fan_07
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<WeatherForecastService>();
+
+            services.AddTransient<IProductService, ProductService>();
+            services.AddScoped<ICartService, CartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

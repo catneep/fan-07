@@ -1,5 +1,6 @@
 @inherits AuthenticatedComponent
 @inject NavigationManager NavMgr
+
 <nav class="navbar is-info" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
@@ -17,14 +18,20 @@
     <div class="navbar-item nav-content">
       <div class="searchbar">
         <p class="control has-icons-left">
-          <input class="input" type="text" placeholder="Buscar">
+          <input
+            @bind-Value="_query"
+            class="input"
+            type="text"
+            placeholder="Buscar"
+            @onkeydown="Search"
+          >
           <span class="icon is-small is-left oi" data-glyph="magnifying-glass">
           </span>
         </p>
       </div>
 
       <div class="buttons">
-        <button class="button is-outlined" >
+        <button class="button is-outlined" @onclick="GoToCart">
           <span class="icon has-text-info oi" data-glyph="cart">
           </span>
         </button>
@@ -38,11 +45,27 @@
 </nav>
 
 @code{
-  private void GoToRegister(){
+  public string _query { get; set; }
+  private void GoToRegister()
+  {
     if (_currentUser == null){
       NavMgr.NavigateTo("/Identity/Account/Register", true);
     } else {
       NavMgr.NavigateTo("/Identity/Account/Manage/Index", true);
+    }
+  }
+
+  private void GoToCart()
+  {
+    NavMgr.NavigateTo("/carrito", true);
+  }
+
+  private void Search(KeyboardEventArgs e)
+  {
+    Console.WriteLine($"Entered: {_query}");
+    if (e.Code == "Enter" || e.Code == "NumpadEnter")
+    {
+      NavMgr.NavigateTo($"/catalogo/{_query}", true);
     }
   }
 

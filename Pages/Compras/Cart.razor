@@ -1,2 +1,56 @@
-@* Implementado con un servicio Scoped *@
 @page "/carrito"
+@inject ICartService CartSrv
+
+@if (Productos.Count > 0) foreach (var item in Productos)
+{
+  <p>@item.Producto.Nombre - @item.Cantidad</p>
+
+}
+else
+{
+  <p>Tu Carrito está vacío</p>
+}
+
+<Embers.Bulma.Button
+  Class="is-primary is-medium"
+  OnClick="TestCart"
+/>
+
+@code{
+  public List<CartItem> Productos { get; set; }
+  protected async override Task OnInitializedAsync()
+  {
+    Productos = CartSrv.Productos.ToList();
+
+  }
+
+  private void TestCart()
+  {
+    Console.WriteLine("Adding items...");
+    if (Productos.Count == 0)
+    {
+      Productos.Add(
+        new CartItem{
+          Producto = new Producto{
+            Nombre = "Producto A",
+            Precio = new decimal(19.99)
+          },
+          Cantidad = 2
+        }
+      );
+
+      Productos.Add(
+        new CartItem{
+          Producto = new Producto{
+            Nombre = "Producto B",
+            Precio = new decimal(42.49)
+          },
+          Cantidad = 7
+        }
+      );
+    }
+    else Productos.Clear();
+    StateHasChanged();
+  }
+
+}

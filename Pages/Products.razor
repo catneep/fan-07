@@ -1,1 +1,12 @@
 @page "/catalogo"
+@page "/catalogo/{query}"
+
+@code{
+  [Parameter] public string query {get; set;} = String.Empty;
+  protected async override Task OnInitializedAsync()
+  {
+    if (query != String.Empty){
+      Console.WriteLine($"Searching for: {query}");
+    }
+  }
+}

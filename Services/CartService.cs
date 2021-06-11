@@ -19,6 +19,7 @@ namespace fan_07.Services
         private readonly ApplicationDbContext dbContext;
         public CartService(ApplicationDbContext _dbContext){
             this.dbContext = _dbContext;
+            this.Productos = new List<CartItem>();
         }
         public List<CartItem> Productos { get; set; }
 
