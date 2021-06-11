@@ -1,3 +1,17 @@
+:root{
+    /* Paleta de colores enviada al grupo */
+    --is-blue-1: #014F86;
+    --is-blue-2: #013A63;
+    --is-blue-3: #01497C;
+    --is-blue-4: #014F86;
+    --is-blue-5: #2A6F97;
+    --is-blue-6: #2C7DA0;
+    --is-blue-7: #468FAF;
+    --is-blue-8: #61A5C2;
+    --is-blue-9: #89C2D9;
+    --is-blue-10: #A9D6E5;
+  }
+
 html, body {
     padding: 0;
     margin: 0;
@@ -43,7 +57,7 @@ a, .btn-link {
 }
 
 #blazor-error-ui {
-    background: lightyellow;
+    background: rgb(255, 112, 112);
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
     display: none;

@@ -1,10 +1,38 @@
 @page "/productos/{id}"
+@inject NavigationManager NavMgr
+@inject IProductService PrdtSrv
+
+<main class="content">
+  <h1>
+    @producto.Nombre
+  </h1>
+</main>
 
 @code{
   [Parameter] public string id { get; set; }
+  private Producto producto;
   
-  protected async override Task OnInitializedAsync()
-  {
-    //TODO: Integrar servicio de producto
+  protected async override Task OnParametersSetAsync()
+  { 
+    if (id != null && id != String.Empty)
+      @* Dev Code Block *@
+      try{
+        producto = await PrdtSrv.GetById(id);
+      } catch (NotImplementedException e){
+        producto = null;
+      }
+
+    else
+      NavMgr.NavigateTo("/404", true);
+
+    @* Dev Code Block *@
+    if (producto == null)
+      producto = new Producto{
+        Nombre = "Test",
+        Descripcion = "This is a test",
+        Precio = new decimal(1.2),
+        Existencia = 1
+      };
   }
+
 }
