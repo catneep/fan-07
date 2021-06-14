@@ -68,7 +68,7 @@
 
   private void Search(KeyboardEventArgs e)
   {
-    if ((e.Code == "Enter" || e.Code == "NumpadEnter")  && _query != null)
+    if ((e.Code == "Enter" || e.Code == "NumpadEnter")  && (_query != null && _query.Trim() != String.Empty))
     {
       NavMgr.NavigateTo($"/catalogo/search/{_query}", true);
     }
