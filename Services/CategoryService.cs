@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using fan_07.Data;
 using fan_07.Models;
@@ -11,7 +12,9 @@ namespace fan_07.Services
 {
     public interface ICategoryService
     {
+        Task<Categoria> GetCategory(string id);
         Task<ICollection<Categoria>> GetCategories();
+        Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria);
         Task<Categoria> CreateCategory(Categoria categoria);
         Task<Subcategoria> CreateSubcategory(Subcategoria subcategoria);
         Task<Categoria> ModifyCategory(Categoria categoria);
@@ -29,10 +32,7 @@ namespace fan_07.Services
         public async Task<Categoria> CreateCategory(Categoria categoria)
         {
             await dbContext.Categorias.AddAsync(categoria);
-            // foreach (var sub in categoria.Subcategorias)
-            // {
-            //     await CreateSubcategory(sub);
-            // }
+            await dbContext.SaveChangesAsync();
             return categoria;
         }
 
@@ -59,6 +59,16 @@ namespace fan_07.Services
         public async Task<ICollection<Categoria>> GetCategories()
         {
             return await dbContext.Categorias.ToListAsync();
+        }
+
+        public async Task<Categoria> GetCategory(string id)
+        {
+            return await dbContext.Categorias.Where(c => c.Id == Guid.Parse(id)).FirstAsync();
+        }
+
+        public async Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria)
+        {
+            return await dbContext.Subcategorias.Where(s => s.Categoria.Id == categoria.Id).ToListAsync();
         }
 
         public async Task<Categoria> ModifyCategory(Categoria categoria)

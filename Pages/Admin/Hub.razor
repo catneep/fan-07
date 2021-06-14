@@ -1,20 +1,39 @@
 @* Aquí el admin literal ve todo *@
 @page "/hub"
 @inject ICategoryService CatSrv
+@inject IProductService ProdSrv
+@inject ICategoryService CatSrv
+@inject ICategoryService CatSrv
 
-<h1 class="title">Nuevo Producto</h1>
-<FormProducto />
+<h1 class="title">Categorias</h1>
+<Embers.Bulma.Table />
 
-<h1 class="title">Nueva Categoria</h1>
-<FormCategoria @ref="categoria" OnValid="() => Test()"/>
 
 @code{
-  private FormCategoria categoria;
-  private async Task Test()
+  private List<Categoria> Categorias;
+  private List<Producto> Productos;
+  private List<ApplicationUser> Usuarios;
+  private List<Distribuidor> Distribuidores;
+  private readonly string[] _headerCategorias = {"Nombre"};
+  private readonly string[] _headerProductos = {"Nombre", "Categoria", "Subcategoria"};
+  private readonly string[] _headerUsuarios = {"Email", "Nombre(s)", "Apellido(s)", "Hash"};
+  private readonly string[] _headerDistribuidores = {""};
+  private void buildRows()
   {
-    Console.WriteLine($"It was valid!\nRegistering...");
-    await CatSrv.CreateCategory(categoria.Categoria);
-    Console.WriteLine($"Yay!");
-    
+
+  }
+  protected async override Task OnInitializedAsync()
+  {
+    var c = await CatSrv.GetCategories();
+    Categorias = c.ToList();
+
+    var p = await ProdSrv.GetAll();
+    Productos = p.ToList();
+
+    var u = await CatSrv.GetCategories();
+    Usuarios = u.ToList();
+
+    var d = await CatSrv.GetCategories();
+    Distribuidores = d.ToList();
   }
 }

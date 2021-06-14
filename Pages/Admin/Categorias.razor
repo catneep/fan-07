@@ -3,7 +3,41 @@
 
 @*Edición de categoría existente*@
 @page "/hub/categorias/{id}"
+@inject ICategoryService CatSrv
+
+<h1 class="title">Categoría</h1>
+<FormCategoria @ref="categoria" Categoria="_Categoria" OnValid="() => Test()"/>
 
 @code{
   [Parameter] public string id {get; set;}
+  private bool _Exists;
+  private Categoria _Categoria;
+  private List<Subcategoria> _Subcategorias;
+  private FormCategoria categoria;
+  protected override void OnInitialized()
+  {
+    if (id == null || id == String.Empty)
+      _Exists = false;
+  }
+  protected async override Task OnParametersSetAsync()
+  {
+    if (_Exists){
+      _Categoria = await CatSrv.GetCategory(id);
+      if (_Categoria != null)
+      {
+        var s = await CatSrv.GetSubcategories(_Categoria);
+        if (s != null && s.Count > 0)
+          _Subcategorias = s.ToList();
+        else
+          _Subcategorias = new List<Subcategoria>();
+      }
+      _Categoria.Subcategorias = _Subcategorias;
+    }
+  }
+  private async Task Test()
+  {
+    Console.WriteLine($"It was valid!\nRegistering...");
+    await CatSrv.CreateCategory(categoria.Categoria);
+    Console.WriteLine($"Yay!");
+  }
 }

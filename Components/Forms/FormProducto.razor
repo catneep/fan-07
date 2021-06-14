@@ -1,4 +1,5 @@
 @implements IForm
+@inject ICategoryService CatSrv
 
 <EditForm
   Model="@Producto"
@@ -93,8 +94,26 @@
 
 @code{
   [Parameter] public Producto Producto {get; set;}
+  [Parameter] public EventCallback OnValid {get; set;}
+  private List<Categoria> Categorias;
+  private List<Subcategoria> Subcategorias;
+  private Categoria _currentCategory;
   private bool _Exists = false;
   private double _Precio = 0;
+  private async void GetSubcategories(Categoria c)
+  {
+    var s = await CatSrv.GetSubcategories(c);
+    if (s.Count > 0)
+      Subcategorias = s.ToList();
+    else
+      Subcategorias = new List<Subcategoria>();
+  }
+  protected async override Task OnInitializedAsync()
+  {
+    var c = await CatSrv.GetCategories();
+    Categorias = c.ToList();
+    Subcategorias = new List<Subcategoria>();
+  }
   protected override void OnParametersSet()
   {
     if (Producto == null)
@@ -107,13 +126,13 @@
   {
     //TODO: Display error messages
     Console.WriteLine($"Form not valid!");
-    return null;
+    return Task.FromResult<bool>(false);
   }
 
   public Task Valid()
   {
     Console.WriteLine($"Submitting form...");
-    return null;
+    return Task.FromResult<bool>(true);
   }
 
 }
