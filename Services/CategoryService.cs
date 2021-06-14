@@ -26,24 +26,34 @@ namespace fan_07.Services
         public CategoryService(ApplicationDbContext _dbContext){
             dbContext = _dbContext;
         }
-        public Task<Categoria> CreateCategory(Categoria categoria)
+        public async Task<Categoria> CreateCategory(Categoria categoria)
         {
-            throw new NotImplementedException();
+            await dbContext.Categorias.AddAsync(categoria);
+            // foreach (var sub in categoria.Subcategorias)
+            // {
+            //     await CreateSubcategory(sub);
+            // }
+            return categoria;
         }
 
-        public Task<Subcategoria> CreateSubcategory(Subcategoria subcategoria)
+        public async Task<Subcategoria> CreateSubcategory(Subcategoria subcategoria)
         {
-            throw new NotImplementedException();
+            await dbContext.Subcategorias.AddAsync(subcategoria);
+            return subcategoria;
         }
 
-        public Task<Categoria> DeleteCategory(Categoria categoria)
+        public async Task<Categoria> DeleteCategory(Categoria categoria)
         {
-            throw new NotImplementedException();
+            dbContext.Categorias.Remove(categoria);
+            await dbContext.SaveChangesAsync();
+            return categoria;
         }
 
-        public Task<Subcategoria> DeleteSubcategory(Subcategoria subcategoria)
+        public async Task<Subcategoria> DeleteSubcategory(Subcategoria subcategoria)
         {
-            throw new NotImplementedException();
+            dbContext.Subcategorias.Remove(subcategoria);
+            await dbContext.SaveChangesAsync();
+            return subcategoria;
         }
 
         public async Task<ICollection<Categoria>> GetCategories()
@@ -51,14 +61,18 @@ namespace fan_07.Services
             return await dbContext.Categorias.ToListAsync();
         }
 
-        public Task<Categoria> ModifyCategory(Categoria categoria)
+        public async Task<Categoria> ModifyCategory(Categoria categoria)
         {
-            throw new NotImplementedException();
+            dbContext.Categorias.Update(categoria);
+            await dbContext.SaveChangesAsync();
+            return categoria;
         }
 
-        public Task<Subcategoria> ModifySubcategory(Subcategoria subcategoria)
+        public async Task<Subcategoria> ModifySubcategory(Subcategoria subcategoria)
         {
-            throw new NotImplementedException();
+            dbContext.Subcategorias.Update(subcategoria);
+            await dbContext.SaveChangesAsync();
+            return subcategoria;
         }
     }
 }

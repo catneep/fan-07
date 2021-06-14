@@ -1,3 +1,5 @@
+@implements IForm
+
 <EditForm
   Model="@Producto"
   OnInvalidSubmit="@Invalid"
@@ -101,15 +103,17 @@
       _Exists = true;
   }
 
-  private void Invalid()
+  public Task Invalid()
   {
     //TODO: Display error messages
     Console.WriteLine($"Form not valid!");
+    return null;
   }
 
-  private void Valid()
+  public Task Valid()
   {
     Console.WriteLine($"Submitting form...");
+    return null;
   }
 
 }

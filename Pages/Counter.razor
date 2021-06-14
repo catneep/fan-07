@@ -1,21 +1,33 @@
 @page "/counter"
 
-<div class="columns">
+<div class="columns" style="padding: 2rem;">
     <div class="column is-8">
         <ImageDisplay Images="@Images"/>
     </div>
     <div class="column">
-        <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus ipsum explicabo aspernatur amet maiores adipisci nostrum distinctio obcaecati quasi culpa dolorem provident iusto, corrupti doloremque asperiores illo nesciunt mollitia suscipit.
-        </p>
+        <div class="p-2 content">
+            <h4 style="margin: 0;">Marca</h4>
+            <h1 style="margin: 0.2rem;">Nombre</h1>
+            <h2>$ 00.<sup>00</sup></h2>
+
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, commodi, nisi quaerat odio repellat ab ipsum nulla ex dolorum fugit omnis praesentium alias consequuntur corporis laborum dolorem aliquid nobis ducimus.
+            </p>
+            <button class="button is-large">
+                Agregar al carrito
+            </button>
+        </div>
     </div>
 </div>
 
 <section id="related"
-    style="padding: 0rem 8rem 0rem 8rem;
-    margin: 3rem 0rem 3rem 0rem;"
+    style="
+    padding: 3rem 13rem 3rem 13rem;
+    margin: 3rem 0rem 3rem 0rem;
+    background-color: var(--is-blue-3);
+    "
 >
-    <div class="columns">
+    <div class="columns is-mobile" style="max-width: 100%; overflow-x: auto;">
         @for (int i = 0; i < 3; i++)
         {
             <div class="column">

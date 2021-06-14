@@ -45,6 +45,7 @@ namespace fan_07
             services.AddSingleton<WeatherForecastService>();
 
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddScoped<ICartService, CartService>();
         }
 

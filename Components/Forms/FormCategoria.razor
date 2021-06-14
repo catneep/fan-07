@@ -1,3 +1,5 @@
+@implements IForm
+
 <EditForm
   Model="@Categoria"
   OnInvalidSubmit="@Invalid"
@@ -18,7 +20,25 @@
       </div>
     </div>
 
-    
+    <label class="label">Nueva Subcategoría</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Subcategoría"
+          @bind="_Subcategoria">
+      </div>
+      <div class="control">
+        <button type="button" class="button is-primary" @onclick="() => AddSub(_Subcategoria)">Agregar</button>
+      </div>
+    </div>
+
+    <Embers.Bulma.Table
+      Headers="@_Headers"
+      Rows="@_Rows"
+    />
 
     <div class="field is-grouped">
       <div class="control">
@@ -33,25 +53,72 @@
 
 @code{
   [Parameter] public Categoria Categoria {get; set;}
+  [Parameter] public EventCallback OnValid {get; set;}
+  private readonly string[] _Headers = {"Subcategorías"};
+  private List<string[]> _Rows;
   private bool _Exists = false;
   private double _Precio = 0;
+  private string _Subcategoria = String.Empty;
   protected override void OnParametersSet()
   {
     if (Categoria == null)
+    {
       Categoria = new Categoria();
-    else
+      _Rows = new List<string[]>();
+    }
+    else{
       _Exists = true;
+      if (Categoria.Subcategorias != null && Categoria.Subcategorias.Count > 0)
+        foreach (var sc in Categoria.Subcategorias)
+          _Rows.Add(new string[] {$"{sc.Nombre}"});
+      else
+        _Rows = new List<string[]>();
+    }
   }
 
-  private void Invalid()
+  private void EmptyFields()
+  {
+    Categoria = new Categoria();
+    _Rows = new List<string[]>();
+    _Subcategoria = String.Empty;
+  }
+
+  private void AddSub(string sub)
+  {
+    _Rows.Add(new string[] {$"{sub}"});
+    var Subs = new List<Subcategoria>();
+    foreach (var row in _Rows)
+    {
+      Subs.Add(
+        new Subcategoria
+          {
+            Nombre = $"{row[0]}",
+            Categoria = Categoria
+          }
+      );
+    }
+    Categoria.Subcategorias = Subs;
+  }
+
+  public Task Invalid()
   {
     //TODO: Display error messages
     Console.WriteLine($"Form not valid!");
+    return Task.FromResult<bool>(true);
   }
 
-  private void Valid()
+  public Task Valid()
   {
     Console.WriteLine($"Submitting form...");
+    Console.WriteLine($"Categoría: {Categoria.Nombre}");
+    Console.WriteLine($"Subcategorías: {Categoria.Subcategorias.Count}");
+    foreach (var sub in Categoria.Subcategorias)
+    {
+      Console.WriteLine($"\t -{sub.Id.ToString()}: {sub.Nombre}");
+    }
+    OnValid.InvokeAsync();
+    EmptyFields();
+    return Task.FromResult<bool>(true);
   }
 
 }

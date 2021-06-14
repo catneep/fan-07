@@ -1,5 +1,20 @@
 @* Aquí el admin literal ve todo *@
 @page "/hub"
+@inject ICategoryService CatSrv
 
 <h1 class="title">Nuevo Producto</h1>
 <FormProducto />
+
+<h1 class="title">Nueva Categoria</h1>
+<FormCategoria @ref="categoria" OnValid="() => Test()"/>
+
+@code{
+  private FormCategoria categoria;
+  private async Task Test()
+  {
+    Console.WriteLine($"It was valid!\nRegistering...");
+    await CatSrv.CreateCategory(categoria.Categoria);
+    Console.WriteLine($"Yay!");
+    
+  }
+}
