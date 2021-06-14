@@ -17,6 +17,7 @@ using fan_07.Areas.Identity;
 using fan_07.Data;
 using fan_07.Models;
 using fan_07.Services;
+using System.Runtime.CompilerServices;
 
 namespace fan_07
 {
@@ -36,7 +37,9 @@ namespace fan_07
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            // services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //     .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<ApplicationUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -50,7 +53,7 @@ namespace fan_07
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -78,6 +81,38 @@ namespace fan_07
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            CreateRoles(serviceProvider).Wait();
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roles = {"Admin", "Cliente"};
+
+            foreach (var role in roles)
+            {
+                var roleExists = await RoleManager.RoleExistsAsync(role);
+                if (roleExists) continue;
+                else {
+                    var result = await RoleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            var user = await UserManager.FindByEmailAsync("admin@fan07.com");
+            if (user == null){
+                var adminUser = new ApplicationUser
+                {
+                    UserName = "admin@fan07.com",
+                    Email = "admin@fan07.com"
+                };
+                var result = await UserManager.CreateAsync(adminUser, "Admin07!");
+                if (result.Succeeded)
+                    await UserManager.AddToRoleAsync(adminUser, "Admin");
+            }
+
+
         }
     }
 }
