@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using fan_07.Data;
 using fan_07.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace fan_07.Services
 {
@@ -18,6 +19,7 @@ namespace fan_07.Services
         Task<Producto> Modify(Producto p);
         Task<Producto> Delete(Producto p);
         Task<List<Producto>> GetRelated(Producto p);
+        Task<List<string>> GetImages(Producto p);
     }
 
     public class ProductService : IProductService
@@ -26,49 +28,78 @@ namespace fan_07.Services
         public ProductService(ApplicationDbContext _dbContext){
             dbContext = _dbContext;
         }
-        public Task<Producto> Delete(Producto p)
+        public async Task<Producto> Delete(Producto p)
         {
-            throw new NotImplementedException();
+            dbContext.Productos.Remove(p);
+            await dbContext.SaveChangesAsync();
+            return p;
         }
 
-        public Task<List<Producto>> GetAll()
+        public async Task<List<Producto>> GetAll()
         {
-            throw new NotImplementedException();
+            return await dbContext.Productos.ToListAsync();
         }
 
-        public Task<List<Producto>> GetAll(Categoria c)
+        public async Task<List<Producto>> GetAll(Categoria c)
         {
-            throw new NotImplementedException();
+            return await dbContext.Productos
+                .Where(p => p.Subcategoria.Categoria.Id == c.Id).ToListAsync();
         }
 
-        public Task<List<Producto>> GetAll(Subcategoria s)
+        public async Task<List<Producto>> GetAll(Subcategoria s)
         {
-            throw new NotImplementedException();
+            return await dbContext.Productos
+                .Where(p => p.Subcategoria.Id == s.Id).ToListAsync();
         }
 
-        public Task<Producto> GetById(string id)
+        public async Task<Producto> GetById(string id)
         {
-            throw new NotImplementedException();
+            try{
+                var parse = Guid.Parse(id);
+                var producto = await dbContext.Productos.FirstAsync(p => p.Id == parse);
+                return producto;
+            } catch (FormatException e){
+                return null;
+            }
         }
 
-        public Task<List<Producto>> GetRelated(Producto p)
+        public async Task<List<string>> GetImages(Producto producto)
         {
-            throw new NotImplementedException();
+            var images = await dbContext.ImagenesProducto.Where(i => i.Producto.Id == producto.Id).ToListAsync();
+            
+            var res = new List<string>();
+
+            if (images != null && images.Count > 1)
+                foreach (var img in images)
+                    res.Add(img.Imagen);
+                
+            return res;
         }
 
-        public Task<Producto> Modify(Producto p)
+        public async Task<List<Producto>> GetRelated(Producto producto)
         {
-            throw new NotImplementedException();
+            return await dbContext.Productos
+                .Where(p => p.Subcategoria.Id == producto.Subcategoria.Id)
+                .Where(p => p.Id != producto.Id)
+                .Take(3).ToListAsync();
         }
 
-        public Task<Producto> Register(Producto p)
+        public async Task<Producto> Modify(Producto p)
         {
-            throw new NotImplementedException();
+            dbContext.Productos.Update(p);
+            await dbContext.SaveChangesAsync();
+            return p;
         }
 
-        public Task<List<Producto>> Search(string filter)
+        public async Task<Producto> Register(Producto p)
         {
-            throw new NotImplementedException();
+            await dbContext.Productos.AddAsync(p);
+            return p;
+        }
+
+        public async Task<List<Producto>> Search(string filter)
+        {
+            return await dbContext.Productos.Where(p => p.Nombre.Contains(filter)).ToListAsync();
         }
     }
 }

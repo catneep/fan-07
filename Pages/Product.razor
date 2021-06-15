@@ -3,48 +3,87 @@
 @inject IProductService PrdtSrv
 @inject ICartService CartSrv
 
-<main class="content">
-  <h1>
-    @producto.Nombre
-  </h1>
+<main>
+  <div class="columns" style="padding: 2rem;">
+    <div class="column is-8">
+        <ImageDisplay Images="@Images"/>
+    </div>
+    <div class="column">
+        <div class="p-2 content">
+            <h4>@producto.Subcategoria.Nombre</h4>
+            <h1>@producto.Nombre</h1>
+            <h2>$<b>@price<sup>@cents</sup></b></h2>
 
-  <button class="button" @onclick="AddToCart">Agregar al carrito</button>
+            <p>
+                @producto.Descripcion
+            </p>
+            <button class="button is-primary is-large" @onclick="AddToCart">
+                Agregar al carrito
+            </button>
+        </div>
+    </div>
+  </div>
 
+  <section id="related">
+      <div class="columns is-mobile">
+          @for (int i = 0; i < 3; i++)
+          {
+              <div class="column">
+                  <Card Title="Uh" />
+              </div>
+          }
+      </div>
+  </section>
 </main>
 
 @code{
   [Parameter] public string id { get; set; }
+  private List<string> Images;
   private Producto producto;
+  private int price, cents;
+  protected override void OnInitialized()
+  {
+    Images = new List<string>();
+  }
   protected async override Task OnParametersSetAsync()
   { 
-    if (id != null && id != String.Empty)
-      @* Dev Code Block *@
-      try{
-        producto = await PrdtSrv.GetById(id);
-      } catch (NotImplementedException e){
-        producto = null;
-      }
+    if (id != null && id != String.Empty){
+      producto = await PrdtSrv.GetById(id);
+    }  
+    
+    @* else
+      NavMgr.NavigateTo("/404", true); *@
 
-    else
-      NavMgr.NavigateTo("/404", true);
-
-    @* Dev Code Block *@
     if (producto == null)
       producto = new Producto{
         Nombre = "Test",
         Descripcion = "This is a test",
         Precio = new decimal(1.2),
-        Existencia = 1
+        Existencia = 1,
+        Subcategoria = new Subcategoria{
+          Nombre = "Tests"
+        }
       };
+    else
+      Images = await PrdtSrv.GetImages(producto);
+
+    setPrice(producto.Precio);
   }
 
-  private void AddToCart(){
+  private void AddToCart()
+  {
     CartSrv.Productos.Add(
       new CartItem{
         Cantidad = 1,
         Producto = producto
       }
     );
+  }
+
+  private void setPrice(decimal d)
+  {
+    this.price = (int) Math.Floor(Convert.ToDouble(d));
+    this.cents = (int) (Convert.ToDouble(d) * 100 - price * 100);
   }
 
 }
