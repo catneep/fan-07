@@ -1,6 +1,19 @@
 @page "/hub/productos/registrar"
 @page "/hub/productos/{id}"
+@inject IProductService PrdtSrv
+
+
 
 @code{
   [Parameter] public string id {get; set;}
+  private Producto producto;
+  protected async override Task OnParametersSetAsync()
+  {
+    if (id != null && id != String.Empty)
+    {
+      producto = await PrdtSrv.GetById(id);
+    }
+    else
+      producto = new Producto();
+  }
 }
