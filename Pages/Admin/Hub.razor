@@ -4,8 +4,10 @@
 @inject IProductService ProdSrv
 
 <h1 class="title">Categorias</h1>
-<Embers.Bulma.Table />
+@* <Embers.Bulma.Table /> *@
 
+<h1 class="title">Productos</h1>
+@* <Embers.Bulma.Table /> *@
 
 @code{
   private List<Categoria> Categorias;
@@ -27,11 +29,5 @@
 
     var p = await ProdSrv.GetAll();
     Productos = p.ToList();
-
-    var u = await CatSrv.GetCategories();
-    Usuarios = u.ToList();
-
-    var d = await CatSrv.GetCategories();
-    Distribuidores = d.ToList();
   }
 }
