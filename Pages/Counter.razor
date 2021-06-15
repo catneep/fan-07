@@ -2,7 +2,7 @@
 
 <div class="columns" style="padding: 2rem;">
     <div class="column is-8">
-        <ImageDisplay Images="@Images"/>
+        <ImageDisplay />
     </div>
     <div class="column">
         <div class="p-2 content">
@@ -39,12 +39,4 @@
 
 @code{
     List<string> Images = new List<string>();
-    protected override void OnInitialized()
-    {
-        Images.Add("");
-        Images.Add("");
-        Images.Add("");
-        Images.Add("");
-        Images.Add("");
-    }
 }

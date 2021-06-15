@@ -1,3 +1,8 @@
+.image-display-container{
+    width: auto;
+    height: auto;
+}
+
 #displayed{
     width: 100%;
 }

@@ -1,22 +1,44 @@
-<section id="displayed">
-  <div class="box">
-    <figure class="image is-16by9">
-      <img src="https://bulma.io/images/placeholders/128x128.png">
-    </figure>
-  </div>
-</section>
+<div class="image-display-container">
+  <section id="displayed">
+    <div class="box">
+      <figure class="image is-16by9">
+        <img src="@Images[displayed]">
+      </figure>
+    </div>
+  </section>
 
-<section id="images">
-  @foreach (var item in Images)
-  {
-    <figure class="image is-128x128">
-      <img src="https://bulma.io/images/placeholders/128x128.png">
-    </figure>
-  }
-</section>
+  <section id="images">
+    @for (int i = 0; i < Images.Count; i++)
+    {
+      var item = Images[i];
+      <figure id="img-@i" class="image is-128x128" @onclick="() => Test(i)">
+        <img src="@item">
+      </figure>
+    }
+  </section>
+</div>
 
 @code{
   [Parameter] public List<string> Images {get; set;}
   private int displayed = 0;
-
+  private void Test(int i)
+  {
+    System.Console.WriteLine($"Index {i} was clicked");
+  }
+  protected override void OnInitialized()
+  {
+    if (Images == null){
+      Images = new List<string>();
+      
+      Images.Add("https://bulma.io/images/placeholders/128x128.png");
+      Images.Add("https://bulma.io/images/placeholders/128x128.png");
+      Images.Add("https://bulma.io/images/placeholders/128x128.png");
+      Images.Add("https://bulma.io/images/placeholders/128x128.png");
+      Images.Add("https://bulma.io/images/placeholders/128x128.png");
+    }
+  }
+  protected override void OnParametersSet()
+  {
+    
+  }
 }
