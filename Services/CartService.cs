@@ -23,14 +23,15 @@ namespace fan_07.Services
         }
         public List<CartItem> Productos { get; set; }
 
-        public Task<Pedido> Checkout(ApplicationUser user, string direccion)
+        public async Task<Pedido> Checkout(ApplicationUser user, string direccion)
         {
             Pedido p = new Pedido{
                 Total = Total(),
                 Usuario = user,
                 Direccion = direccion
             };
-            throw new NotImplementedException("TODO: Add to dbContext");
+            await dbContext.Pedidos.AddAsync(p);
+            return p;
         }
 
         public decimal Total()

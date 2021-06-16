@@ -2,10 +2,11 @@
 @page "/hub/productos/{id}"
 @inject IProductService PrdtSrv
 
-<FormProducto OnValid="ValidSubmit" />
+<FormProducto @ref="form" OnValid="ValidSubmit" />
 
 @code{
   [Parameter] public string id {get; set;}
+  private FormProducto form;
   private Producto producto;
   private void ValidSubmit()
   {

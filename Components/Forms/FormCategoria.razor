@@ -107,7 +107,7 @@
     return Task.FromResult<bool>(true);
   }
 
-  public Task Valid()
+  public async Task Valid()
   {
     Console.WriteLine($"Submitting form...");
     Console.WriteLine($"Categoría: {Categoria.Nombre}");
@@ -116,9 +116,9 @@
     {
       Console.WriteLine($"\t -{sub.Id.ToString()}: {sub.Nombre}");
     }
-    OnValid.InvokeAsync();
+    await OnValid.InvokeAsync();
     EmptyFields();
-    return Task.FromResult<bool>(true);
+    //return Task.FromResult<bool>(true);
   }
 
 }

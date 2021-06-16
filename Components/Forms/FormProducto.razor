@@ -1,3 +1,5 @@
+@using System.IO
+@inject NavigationManager NavMgr
 @implements IForm
 @inject ICategoryService CatSrv
 @inject IProductService PrdtSrv
@@ -31,6 +33,11 @@
           @bind="Producto.Descripcion"
           ></textarea>
       </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Imágenes</label>
+      <InputFile OnChange="@LoadFiles" multiple />
     </div>
 
     <div class="field">
@@ -81,7 +88,7 @@
       </div>
     </div>
 
-    @if (nombresCategorias.Count > 0)
+    @if (nombresCategorias != null && nombresCategorias.Count > 0)
     {
       <div class="field">
         <label class="label">Subcategoría</label>
@@ -143,7 +150,6 @@
     }
     buildNameLists();
   }
-
   private void buildNameLists()
   {
     nombresCategorias = new List<string>();
@@ -154,18 +160,54 @@
       foreach (var s in Subcategorias)
         nombresCategorias.Add(s.Nombre);
   }
-
   public Task Invalid()
   {
     //TODO: Display error messages
     Console.WriteLine($"Form not valid!");
     return Task.FromResult<bool>(false);
   }
-
-  public Task Valid()
+  public async Task Valid()
   {
     Console.WriteLine($"Submitting form...");
-    return Task.FromResult<bool>(true);
+    await OnValid.InvokeAsync();
+    Console.WriteLine($"ok kid");
+    NavMgr.NavigateTo("/", true);
+  }
+  @* Manejo de archivos *@
+  private List<IBrowserFile> loadedFiles = new();
+  private readonly long maxFileSize = 1024 * 1024 * 5;
+  private const int maxAllowedFiles = 5;
+  private bool isLoading;
+  private async Task LoadFiles(InputFileChangeEventArgs e)
+  {
+    Producto.Imagenes = new List<ImagenProducto>();
+    isLoading = true;
+    loadedFiles.Clear();
+
+    foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+    {
+      try
+      {
+        loadedFiles.Add(file);
+
+        var bytes = new byte[file.Size];
+        await file.OpenReadStream(maxFileSize).ReadAsync(bytes, 0, bytes.Length);
+
+        var base64 = Convert.ToBase64String(bytes);
+        Producto.Imagenes.Add(
+          new ImagenProducto{
+            Producto = Producto,
+            Imagen = base64
+          }
+        );
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"File: {file.Name} Error: {ex.Message}");
+      }
+    }
+
+    isLoading = false;
   }
 
 }
