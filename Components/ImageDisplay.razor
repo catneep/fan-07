@@ -11,7 +11,8 @@
     @for (int i = 0; i < Images.Count; i++)
     {
       var item = Images[i];
-      <figure id="img-@i" class="image is-128x128" @onclick="() => Test(i)">
+      int index = i;
+      <figure class="image is-128x128" @onclick="() => Test(index)">
         <img src="@item">
       </figure>
     }
@@ -23,7 +24,9 @@
   private int displayed = 0;
   private void Test(int i)
   {
-    System.Console.WriteLine($"Index {i} was clicked");
+    //Console.WriteLine($"Index {i} was clicked");
+    displayed = i;
+    StateHasChanged();
   }
   protected override void OnInitialized()
   {
@@ -32,13 +35,9 @@
       
       Images.Add("https://bulma.io/images/placeholders/128x128.png");
       Images.Add("https://bulma.io/images/placeholders/128x128.png");
-      Images.Add("https://bulma.io/images/placeholders/128x128.png");
+      Images.Add("https://upload.wikimedia.org/wikipedia/commons/c/c7/Tabby_cat_with_blue_eyes-3336579.jpg");
       Images.Add("https://bulma.io/images/placeholders/128x128.png");
       Images.Add("https://bulma.io/images/placeholders/128x128.png");
     }
-  }
-  protected override void OnParametersSet()
-  {
-    
   }
 }

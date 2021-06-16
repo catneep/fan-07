@@ -6,7 +6,8 @@
 <main>
   <div class="columns" style="padding: 2rem;">
     <div class="column is-8">
-        <ImageDisplay Images="@Images"/>
+        @* <ImageDisplay Images="@Images"/> *@
+        <ImageDisplay />
     </div>
     <div class="column">
         <div class="p-2 content">
@@ -41,10 +42,6 @@
   private List<string> Images;
   private Producto producto;
   private int price, cents;
-  protected override void OnInitialized()
-  {
-    Images = new List<string>();
-  }
   protected async override Task OnParametersSetAsync()
   { 
     if (id != null && id != String.Empty){

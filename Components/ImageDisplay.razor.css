@@ -13,3 +13,12 @@
     padding: 0.5rem 1rem 0.5rem 1rem;
     justify-content: space-between;
 }
+
+#images > figure{
+    opacity: 60%;
+    transition: 0.15s ease-in-out;
+}
+
+#images > figure:hover{
+    opacity: 100%;
+}
