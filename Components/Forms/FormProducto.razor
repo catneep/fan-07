@@ -1,5 +1,6 @@
 @implements IForm
 @inject ICategoryService CatSrv
+@inject IProductService PrdtSrv
 
 <EditForm
   Model="@Producto"
@@ -60,26 +61,38 @@
     <div class="field">
       <label class="label">Categoría</label>
       <div class="control">
-        <div class="select">
-          <select>
-            <option>Select dropdown</option>
-            <option>With options</option>
-          </select>
-        </div>
+        @if (_currentCategory != null)
+        {
+          <Embers.Bulma.Dropdown
+            @ref="dropCategorias"
+            Placeholder="@_currentCategory.Nombre"
+            Items="@nombresCategorias"
+          />
+        }
+        else
+        {
+          <Embers.Bulma.Dropdown
+            @ref="dropCategorias"
+            Placeholder="@nombresCategorias[0]"
+            Items="@nombresCategorias"
+          />
+        }
+        
       </div>
     </div>
 
-    <div class="field">
-      <label class="label">Subcategoría</label>
-      <div class="control">
-        <div class="select">
-          <select>
-            <option>Select dropdown</option>
-            <option>With options</option>
-          </select>
+    @if (nombresCategorias.Count > 0)
+    {
+      <div class="field">
+        <label class="label">Subcategoría</label>
+        <div class="control">
+          <Embers.Bulma.Dropdown
+            @ref="dropSubcategorias"
+            Items="@nombresSubcategorias"
+          />
         </div>
       </div>
-    </div>
+    }
 
     <div class="field is-grouped">
       <div class="control">
@@ -95,31 +108,51 @@
 @code{
   [Parameter] public Producto Producto {get; set;}
   [Parameter] public EventCallback OnValid {get; set;}
+  private Dropdown dropCategorias, dropSubcategorias;
   private List<Categoria> Categorias;
   private List<Subcategoria> Subcategorias;
+  private List<string> nombresCategorias, nombresSubcategorias;
   private Categoria _currentCategory;
+  private Subcategoria _currentSubcategory;
   private bool _Exists = false;
   private double _Precio = 0;
-  private async void GetSubcategories(Categoria c)
+  private async Task GetSubcategories(Categoria c)
   {
+    Subcategorias = new List<Subcategoria>();
     var s = await CatSrv.GetSubcategories(c);
     if (s.Count > 0)
       Subcategorias = s.ToList();
-    else
-      Subcategorias = new List<Subcategoria>();
   }
   protected async override Task OnInitializedAsync()
   {
     var c = await CatSrv.GetCategories();
     Categorias = c.ToList();
-    Subcategorias = new List<Subcategoria>();
   }
-  protected override void OnParametersSet()
+  protected async override Task OnParametersSetAsync()
   {
     if (Producto == null)
+    {
       Producto = new Producto();
+      _currentCategory = null;
+    }
     else
+    {
       _Exists = true;
+      _currentCategory = await CatSrv.GetForProduct(Producto);
+      await GetSubcategories(_currentCategory);
+    }
+    buildNameLists();
+  }
+
+  private void buildNameLists()
+  {
+    nombresCategorias = new List<string>();
+    nombresSubcategorias = new List<string>();
+    foreach (var c in Categorias)
+      nombresCategorias.Add(c.Nombre);
+    if (_currentCategory != null)
+      foreach (var s in Subcategorias)
+        nombresCategorias.Add(s.Nombre);
   }
 
   public Task Invalid()

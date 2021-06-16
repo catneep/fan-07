@@ -12,6 +12,7 @@ namespace fan_07.Services
 {
     public interface ICategoryService
     {
+        Task<Categoria> GetForProduct(Producto producto);
         Task<Categoria> GetCategory(string id);
         Task<ICollection<Categoria>> GetCategories();
         Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria);
@@ -64,6 +65,11 @@ namespace fan_07.Services
         public async Task<Categoria> GetCategory(string id)
         {
             return await dbContext.Categorias.Where(c => c.Id == Guid.Parse(id)).FirstAsync();
+        }
+
+        public async Task<Categoria> GetForProduct(Producto producto)
+        {
+            return await dbContext.Categorias.Where(c => c.Id == producto.Subcategoria.Categoria.Id).FirstOrDefaultAsync();
         }
 
         public async Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria)
