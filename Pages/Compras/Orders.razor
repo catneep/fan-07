@@ -5,7 +5,17 @@
 
 <main>
   <h1 class="title">Mis Pedidos</h1>
-
+  @if (Pedidos != null && Pedidos.Count > 0)
+  foreach(var p in Pedidos)
+  {
+    <OrderCard Pedido="@p"/>
+  }
+  else 
+  {
+    <p>
+      ¡Aún no tienes pedidos!
+    </p>
+  }
 </main>
 
 @code{
@@ -13,6 +23,9 @@
   protected async override Task OnInitializedAsync()
   {
     await base.OnInitializedAsync();
-
+    if (_currentUser == null)
+      NavMgr.NavigateTo("/Identity/Account/Register", true);
+    else
+    Pedidos = await MailSrv.GetPedidos(_currentUser);
   }
 }

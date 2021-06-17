@@ -47,6 +47,7 @@ namespace fan_07
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IMailingService, MailingService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddSingleton<ICartService, CartService>();
         }

@@ -4,20 +4,21 @@
       <div class="level-item">
         <p>
           <span>
-            Fecha de Entrega: AA/BB/CCCC
+            Fecha de Entrega: @Pedido.Envio.FechaEstimada
           </span>
         </p>
       </div>
     </div>
 
     <div class="level-item">
-      Id de Orden: sd890a-as9-sd00-so100o
+      Id de Orden: @Pedido.Id.ToString()
     </div>
 
     <div class="level-right">
       <div class="level-item">
         <span>
-          <a href="#">Ver detalles </a> | <a href="#"> Soporte</a>
+          <a
+            href="/pedidos/@Pedido.Id.ToString()">Ver detalles </a> | <a href="/404"> Soporte</a>
         </span>
       </div>
     </div>

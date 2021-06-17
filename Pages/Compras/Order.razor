@@ -1,5 +1,27 @@
 @page "/pedidos/{id}"
+@inherits AuthenticatedComponent
+@inject IMailingService MailSrv
+@inject NavigationManager NavMgr
+
+<main>
+  <h1 class="title">Pedido</h1>
+  <h2 class="subtitle"></h2>
+</main>
 
 @code{
   [Parameter] public string id {get; set;}
+  private Pedido Pedido;
+  protected async override Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    if (_currentUser == null)
+      NavMgr.NavigateTo("/404", true);
+  }
+  protected async override Task OnParametersSetAsync()
+  {
+    if (id != null && id != String.Empty)
+    {
+      Pedido = await MailSrv.GetPedido(id);
+    }
+  }
 }
