@@ -1,0 +1,34 @@
+<div class="box">
+  <section id="top" class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <p>
+          <span>
+            Fecha de Entrega: AA/BB/CCCC
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="level-item">
+      Id de Orden: sd890a-as9-sd00-so100o
+    </div>
+
+    <div class="level-right">
+      <div class="level-item">
+        <span>
+          <a href="#">Ver detalles </a> | <a href="#"> Soporte</a>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section id="bottom">
+    @ChildContent
+  </section>
+</div>
+
+@code{
+  [Parameter] public Pedido Pedido {get; set;}
+  [Parameter] public RenderFragment ChildContent {get; set;}
+}

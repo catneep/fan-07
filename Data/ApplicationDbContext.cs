@@ -17,6 +17,7 @@ namespace fan_07.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Subcategoria> Subcategorias { get; set; }
         public DbSet<Producto> Productos { get; set; }
+        public DbSet<Pago> MetodosPago { get; set; }
         public DbSet<Direccion> Direcciones { get; set; }
         public DbSet<ImagenProducto> ImagenesProducto { get; set; }
         public DbSet<Distribuidor> Distribuidores { get; set; }

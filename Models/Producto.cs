@@ -7,6 +7,7 @@ namespace fan_07.Models
     public class Producto
     {
         public Guid Id { get; set; } = Guid.NewGuid();
+        public string Genero { get; set; } = "N/A";
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }

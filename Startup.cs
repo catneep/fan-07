@@ -88,7 +88,7 @@ namespace fan_07
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roles = {"Admin", "Cliente"};
+            string[] roles = {"Admin", "Cliente", "Ventas", "Paquetería"};
 
             foreach (var role in roles)
             {

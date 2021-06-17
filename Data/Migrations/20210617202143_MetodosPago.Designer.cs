@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using fan_07.Data;
 
 namespace fan_07.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210617202143_MetodosPago")]
+    partial class MetodosPago
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,9 +383,6 @@ namespace fan_07.Data.Migrations
 
                     b.Property<int>("Existencia")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Genero")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("TEXT");

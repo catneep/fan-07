@@ -1,1 +1,18 @@
 @page "/pedidos"
+@inherits AuthenticatedComponent
+@inject IMailingService MailSrv
+@inject NavigationManager NavMgr
+
+<main>
+  <h1 class="title">Mis Pedidos</h1>
+
+</main>
+
+@code{
+  private List<Pedido> Pedidos;
+  protected async override Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+
+  }
+}

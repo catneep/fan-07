@@ -1,0 +1,123 @@
+@implements IForm
+
+<EditForm
+  Model="@Direccion"
+  OnInvalidSubmit="@Invalid"
+  OnValidSubmit="@Valid">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <fieldset>
+    <div class="field">
+      <label class="label">Calle</label>
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Calle"
+          @bind="calle">
+      </div>
+    </div>
+
+    <label class="label"># Exterior</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="# Exterior"
+          @bind="numeroExt">
+      </div>
+    </div>
+
+    <label class="label"># Interior</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="# Interior"
+          @bind="numeroInt">
+      </div>
+    </div>
+    
+    <label class="label">Código Postal</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Código Postal"
+          @bind="cp">
+      </div>
+    </div>
+
+    <label class="label">Ciudad</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Ciudad"
+          @bind="ciudad">
+      </div>
+    </div>
+    
+    <label class="label">Estado</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Estado"
+          @bind="estado">
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button type="submit" class="button is-success">Aceptar</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger is-light">Cancelar</button>
+      </div>
+    </div>
+  </fieldset>
+</EditForm>
+
+@code{
+  private string calle, numeroInt, numeroExt, cp, ciudad, estado;
+  [Parameter] public Direccion Direccion {get; set;}
+  [Parameter] public EventCallback OnValid {get; set;}
+  protected override void OnParametersSet()
+  {
+    if (Direccion == null)
+      Direccion = new Direccion();
+  }
+
+  public Task Invalid()
+  {
+    //TODO: Display error messages
+    Console.WriteLine($"Form not valid!");
+    return Task.FromResult<bool>(true);
+  }
+
+  public async Task Valid()
+  {
+    Console.WriteLine($"Submitting form...");
+    string ext = String.Empty;
+    if (numeroExt != null && numeroExt != String.Empty)
+      ext = $", ext. {numeroExt}";
+    this.Direccion.Domicilio =
+      $"{calle} #{numeroInt}{ext}, CP. {cp}, {ciudad}, {estado}, México";
+    await OnValid.InvokeAsync();
+    //return Task.FromResult<bool>(true);
+  }
+
+}

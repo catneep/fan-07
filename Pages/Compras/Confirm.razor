@@ -1,6 +1,10 @@
 @page "/carrito/pago/{result}"
 @inject NavigationManager NavMgr
 
+<OrderCard>
+  Detalles de la orden lol
+</OrderCard>
+
 @code{
   [Parameter] public string result {get; set;}
   protected async override Task OnParametersSetAsync()
