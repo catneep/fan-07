@@ -1,0 +1,21 @@
+@page "/carrito/pago/{result}"
+@inject NavigationManager NavMgr
+
+@code{
+  [Parameter] public string result {get; set;}
+  protected async override Task OnParametersSetAsync()
+  {
+    switch(result){
+      case "success":
+        Console.WriteLine($"Order created");
+        
+        break;
+      case "failed":
+      Console.WriteLine($"Order not created");
+        break;
+      default:
+        NavMgr.NavigateTo("/404", true);
+        break;
+    }
+  }
+}

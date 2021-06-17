@@ -43,19 +43,31 @@ namespace fan_07.Services
 
         public async Task<List<Producto>> GetAll()
         {
-            return await dbContext.Productos.ToListAsync();
+            return await dbContext.Productos
+                .Include(p => p.Imagenes)
+                .Include(p => p.Subcategoria)
+                .ThenInclude(s => s.Categoria)
+                .ToListAsync();
         }
 
         public async Task<List<Producto>> GetAll(Categoria c)
         {
             return await dbContext.Productos
-                .Where(p => p.Subcategoria.Categoria.Id == c.Id).ToListAsync();
+                .Where(p => p.Subcategoria.Categoria.Id == c.Id)
+                .Include(p => p.Imagenes)
+                .Include(p => p.Subcategoria)
+                .ThenInclude(s => s.Categoria)
+                .ToListAsync();
         }
 
         public async Task<List<Producto>> GetAll(Subcategoria s)
         {
             return await dbContext.Productos
-                .Where(p => p.Subcategoria.Id == s.Id).ToListAsync();
+                .Where(p => p.Subcategoria.Id == s.Id)
+                .Include(p => p.Imagenes)
+                .Include(p => p.Subcategoria)
+                .ThenInclude(s => s.Categoria)
+                .ToListAsync();
         }
 
         public async Task<Producto> GetById(string id)
@@ -124,7 +136,11 @@ namespace fan_07.Services
         public async Task<List<Producto>> Search(string filter)
         {
             return await dbContext.Productos
-                .Where(p => p.Nombre.ToLower().Contains($"{filter.ToLower()}")).ToListAsync();
+                .Where(p => p.Nombre.ToLower().Contains($"{filter.ToLower()}"))
+                .Include(p => p.Imagenes)
+                .Include(p => p.Subcategoria)
+                .ThenInclude(s => s.Categoria)
+                .ToListAsync();
         }
     }
 }

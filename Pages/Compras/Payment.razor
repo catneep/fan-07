@@ -1,1 +1,26 @@
 @page "/carrito/pago"
+@inherits AuthenticatedComponent
+@inject ICartService CartSrv
+@inject NavigationManager NavMgr
+
+<main>
+  <div class="columns">
+    <div class="column is-2"></div>
+    <div class="column">
+      <button class="button is-primary" @onclick="Complete">
+        Simular Pago
+      </button>
+    </div>
+    <div class="column is-2"></div>
+  </div>
+</main>
+
+@code{
+  private void Complete()
+  {
+    //Simula pago rechazado
+    Random r = new Random();
+    string result = ((int) r.Next(10) < 2 ? "success" : "failed");
+    NavMgr.NavigateTo($"/carrito/pago/{result}");
+  }
+}

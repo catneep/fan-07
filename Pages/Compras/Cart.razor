@@ -1,31 +1,40 @@
 @page "/carrito"
 @inject ICartService CartSrv
 @inject IProductService PrdtSrv
+@inject NavigationManager NavMgr
 
 <main>
+  <div class="content">
+    <h1>Mi Carrito</h1>
+  </div>
   @if (CartSrv.Productos.Count > 0)
   {
     <div class="columns">
       <div class="column is-2"></div>
       <div class="column">
         <div class="box">
-          <CartTable Rows="@display" Minus="reduce" Plus="add" Delete="delete"/>
+          <CartTable
+            Rows="@display"
+            Minus="reduce"
+            Plus="add"
+            Delete="delete"
+          />
         </div>
 
-        <div class="level content">
+        <div class="level">
           <div class="level-left">
-            <p class="level-item">
+            <p class="level-item content">
               Tienes @CartSrv.Count() producto(s) en tu carrito
             </p>
           </div>
           <div class="level-right">
-            <div class="level-item">
+            <div class="level-item content">
               <div class="columns is-multiline is-mobile">
                 <div class="column is-full">
                   <p>Total: <em>$ @CartSrv.Total()</em></p>
                 </div>
                 <div class="column is-full">
-                  <button class="button is-primary">
+                  <button class="button is-primary" @onclick="Order">
                     Completar Pedido
                   </button>
                 </div>
@@ -40,12 +49,13 @@
   }
   else
   {
-    <p>Tu Carrito está vacío</p>
+    <div class="content">
+      <h4>¡Tu Carrito está vacío!</h4>
+    </div>
   }
 </main>
 
 @code{
-  public List<CartItem> Productos { get; set; }
   private List<string[]> display;
   private string formatDecimal(decimal d)
   {
@@ -56,7 +66,7 @@
   private void buildTable()
   {
     display = new List<string[]>();
-      foreach (var p in Productos)
+      foreach (var p in CartSrv.Productos)
       {
         display.Add(
           new string[]
@@ -72,10 +82,7 @@
   }
   protected override void OnInitialized()
   {
-    Console.WriteLine($"Count: {CartSrv.Productos.Count}");
-    Productos = CartSrv.Productos;
-    
-    if (Productos != null && Productos.Count > 0)
+    if (CartSrv.Productos != null && CartSrv.Productos.Count > 0)
       buildTable();
   }
 
@@ -86,31 +93,34 @@
       CartSrv.Productos.Remove(CartSrv.Productos[i]);
     }
 
-    if (Productos != null && Productos.Count > 0)
+    if (CartSrv.Productos != null && CartSrv.Productos.Count > 0)
       buildTable();
     
     StateHasChanged();
   }
-
   public void add(int i)
   {
     if (CartSrv.Productos[i].Cantidad < CartSrv.Productos[i].Producto.Existencia)
       CartSrv.Productos[i].Cantidad++;
 
-    if (Productos != null && Productos.Count > 0)
+    if (CartSrv.Productos != null && CartSrv.Productos.Count > 0)
+      buildTable();
+
+    StateHasChanged();
+  }
+  public void delete(int i)
+  {
+    CartSrv.Productos.Remove(CartSrv.Productos[i]);
+
+    if (CartSrv.Productos != null && CartSrv.Productos.Count > 0)
       buildTable();
 
     StateHasChanged();
   }
 
-  public void delete(int i)
+  private void Order()
   {
-    CartSrv.Productos.Remove(CartSrv.Productos[i]);
-
-    if (Productos != null && Productos.Count > 0)
-      buildTable();
-
-    StateHasChanged();
+    NavMgr.NavigateTo("/carrito/pago");
   }
 
 }

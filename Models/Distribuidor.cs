@@ -8,5 +8,10 @@ namespace fan_07.Models
         public string Nombre { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
+        public decimal Costo { get; set; }
+
+        //Dias que tarda en entregar el pedido
+        public int Dias { get; set; }
+
     }
 }

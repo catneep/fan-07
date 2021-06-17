@@ -1,6 +1,6 @@
 @inject NavigationManager NavMgr
 
-<Card Title="@Producto.Nombre" Subtitle='@($"${Producto.Precio.ToString()}")'>
+<Card Title="@Producto.Nombre" Subtitle='@($"${Producto.Precio.ToString()}")' Image="@img">
   <p>@Producto.Descripcion</p>
   <br>
   <button class="button is-primary" @onclick="GoToProduct">
@@ -9,6 +9,19 @@
 </Card>
 
 @code{
+  private string img = "https://bulma.io/images/placeholders/1280x960.png";
+  protected override void OnInitialized()
+  {
+    Console.WriteLine($"{Producto.Nombre} has {Producto.Imagenes.Count} images");
+    
+    try
+    {
+      img = Producto.Imagenes.ToList()[0].Imagen;
+    } catch (Exception e){
+      Console.WriteLine($"Error {e.Message}");
+      img = "https://bulma.io/images/placeholders/1280x960.png";
+    }
+  }
   [Parameter] public Producto Producto {get; set;}
   private void GoToProduct()
   {

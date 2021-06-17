@@ -1,0 +1,8 @@
+figure{
+  overflow: hidden;
+}
+
+figure img{
+  height: auto;
+  width: auto;
+}
