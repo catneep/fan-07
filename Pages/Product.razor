@@ -7,7 +7,15 @@
 <main>
   <div class="columns" style="padding: 2rem;">
     <div class="column is-8">
-        <ImageDisplay Images="@Images"/>
+        @if (Images != null && Images.Count > 0)
+        {
+          <ImageDisplay Images="@Images"/>
+        }
+        else
+        {
+          <ImageDisplay Images="@Images"/>
+        }
+
     </div>
     <div class="column">
         <div class="p-2 content">
@@ -49,9 +57,9 @@
       producto = await PrdtSrv.GetById(id);
       if (producto != null)
       {
-        Images = await PrdtSrv.GetImages(producto);
         categoria = await CatSrv.GetForProduct(producto);
         setPrice(producto.Precio);
+        Images = await PrdtSrv.GetImages(producto);
       }
       else
         NavMgr.NavigateTo("/404", true);

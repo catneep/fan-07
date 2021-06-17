@@ -33,13 +33,14 @@
         </td>
         <td>
           <div class="buttons">
-            <button class="button">
+            <button class="button is-info is-inverted" @onclick="() => _Minus(index)">
               -
             </button>
-            <button class="button">
+            <button class="button is-info is-inverted" @onclick="() => _Plus(index)">
               +
             </button>
-            <button class="button is-danger">
+            <button class="button is-danger is-small" @onclick="() => _Delete(index)">
+              <span class="oi" data-glyph="trash" />
               Eliminar
             </button>
           </div>
@@ -51,4 +52,20 @@
 
 @code{
   [Parameter] public List<string[]> Rows {get; set;}
+  [Parameter] public EventCallback<int> Minus {get; set;}
+  [Parameter] public EventCallback<int> Plus {get; set;}
+  [Parameter] public EventCallback<int> Delete {get; set;}
+  private async void _Minus(int i)
+  {
+    await Minus.InvokeAsync(i);
+  }
+  private async void _Plus(int i)
+  {
+    await Plus.InvokeAsync(i);
+  }
+  private async void _Delete(int i)
+  {
+    await Delete.InvokeAsync(i);
+  }
+  
 }

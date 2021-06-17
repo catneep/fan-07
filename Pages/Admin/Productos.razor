@@ -15,8 +15,9 @@
   }
   protected async override Task OnParametersSetAsync()
   {
-    if (id != null && id != String.Empty)
+    if (id != null && id != String.Empty && id != "registro")
     {
+      Console.WriteLine($"Getting id {id}");
       producto = await PrdtSrv.GetById(id);
     }
     else

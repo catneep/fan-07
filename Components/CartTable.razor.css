@@ -1,3 +1,18 @@
 .img-cell{
-    width: 7rem;
+    width: 104px;
+}
+
+figure.image{
+    max-width: 96px;
+    max-height: 96px;
+    overflow: hidden;
+}
+
+th, td{
+    text-align: center;
+    vertical-align: middle;
+}
+
+div.buttons{
+    justify-content: center !important;
 }

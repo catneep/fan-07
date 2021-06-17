@@ -123,7 +123,8 @@ namespace fan_07.Services
 
         public async Task<List<Producto>> Search(string filter)
         {
-            return await dbContext.Productos.Where(p => p.Nombre.Contains(filter)).ToListAsync();
+            return await dbContext.Productos
+                .Where(p => p.Nombre.ToLower().Contains($"{filter.ToLower()}")).ToListAsync();
         }
     }
 }

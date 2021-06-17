@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using fan_07.Models;
 
 namespace fan_07.Services
@@ -8,6 +9,7 @@ namespace fan_07.Services
     {
         List<CartItem> Productos { get; set; }
         decimal Total();
+        int Count();
     }
 
     public class CartService : ICartService
@@ -15,6 +17,16 @@ namespace fan_07.Services
         public CartService(){
             if (Productos == null)
                 Productos = new List<CartItem>();
+        }
+
+        public int Count()
+        {
+            int result = 0;
+            foreach (var item in Productos)
+            {
+                result += item.Cantidad;
+            }
+            return result;
         }
 
         public List<CartItem> Productos { get; set; }

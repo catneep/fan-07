@@ -1,13 +1,39 @@
 @page "/carrito"
 @inject ICartService CartSrv
+@inject IProductService PrdtSrv
 
 <main>
-  @if (CartSrv.Productos.Count > 0) foreach (var item in Productos)
+  @if (CartSrv.Productos.Count > 0)
   {
     <div class="columns">
       <div class="column is-2"></div>
-      <div class="column is-centered">
-        <CartTable Rows="@display"/>
+      <div class="column">
+        <div class="box">
+          <CartTable Rows="@display" Minus="reduce" Plus="add" Delete="delete"/>
+        </div>
+
+        <div class="level content">
+          <div class="level-left">
+            <p class="level-item">
+              Tienes @CartSrv.Count() producto(s) en tu carrito
+            </p>
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <div class="columns is-multiline is-mobile">
+                <div class="column is-full">
+                  <p>Total: <em>$ @CartSrv.Total()</em></p>
+                </div>
+                <div class="column is-full">
+                  <button class="button is-primary">
+                    Completar Pedido
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="column is-2"></div>
     </div>
@@ -27,14 +53,9 @@
     int decimales = (int) (((double) d ) * 100 - enteros * 100);
     return $"{enteros}.{decimales}";
   }
-  protected override void OnInitialized()
+  private void buildTable()
   {
-    Console.WriteLine($"Count: {CartSrv.Productos.Count}");
-    Productos = CartSrv.Productos;
-    
-    if (Productos != null && Productos.Count > 0)
-    {
-      display = new List<string[]>();
+    display = new List<string[]>();
       foreach (var p in Productos)
       {
         display.Add(
@@ -48,7 +69,48 @@
           }
         );
       }
+  }
+  protected override void OnInitialized()
+  {
+    Console.WriteLine($"Count: {CartSrv.Productos.Count}");
+    Productos = CartSrv.Productos;
+    
+    if (Productos != null && Productos.Count > 0)
+      buildTable();
+  }
+
+  public void reduce(int i)
+  {
+    CartSrv.Productos[i].Cantidad--;
+    if (CartSrv.Productos[i].Cantidad <= 0){
+      CartSrv.Productos.Remove(CartSrv.Productos[i]);
     }
+
+    if (Productos != null && Productos.Count > 0)
+      buildTable();
+    
+    StateHasChanged();
+  }
+
+  public void add(int i)
+  {
+    if (CartSrv.Productos[i].Cantidad < CartSrv.Productos[i].Producto.Existencia)
+      CartSrv.Productos[i].Cantidad++;
+
+    if (Productos != null && Productos.Count > 0)
+      buildTable();
+
+    StateHasChanged();
+  }
+
+  public void delete(int i)
+  {
+    CartSrv.Productos.Remove(CartSrv.Productos[i]);
+
+    if (Productos != null && Productos.Count > 0)
+      buildTable();
+
+    StateHasChanged();
   }
 
 }
