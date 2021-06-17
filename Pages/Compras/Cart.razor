@@ -1,56 +1,54 @@
 @page "/carrito"
 @inject ICartService CartSrv
 
-@if (Productos.Count > 0) foreach (var item in Productos)
-{
-  <p>@item.Producto.Nombre - @item.Cantidad</p>
-
-}
-else
-{
-  <p>Tu Carrito está vacío</p>
-}
-
-<Embers.Bulma.Button
-  Class="is-primary is-medium"
-  OnClick="TestCart"
-/>
+<main>
+  @if (CartSrv.Productos.Count > 0) foreach (var item in Productos)
+  {
+    <div class="columns">
+      <div class="column is-2"></div>
+      <div class="column is-centered">
+        <CartTable Rows="@display"/>
+      </div>
+      <div class="column is-2"></div>
+    </div>
+  }
+  else
+  {
+    <p>Tu Carrito está vacío</p>
+  }
+</main>
 
 @code{
   public List<CartItem> Productos { get; set; }
+  private List<string[]> display;
+  private string formatDecimal(decimal d)
+  {
+    int enteros = ((int)Math.Floor(((double)d)));
+    int decimales = (int) (((double) d ) * 100 - enteros * 100);
+    return $"{enteros}.{decimales}";
+  }
   protected async override Task OnInitializedAsync()
   {
-    Productos = CartSrv.Productos.ToList();
-
-  }
-
-  private void TestCart()
-  {
-    Console.WriteLine("Adding items...");
-    if (Productos.Count == 0)
+    Console.WriteLine($"Count: {CartSrv.Productos.Count}");
+    Productos = CartSrv.Productos;
+    
+    if (Productos != null && Productos.Count > 0)
     {
-      Productos.Add(
-        new CartItem{
-          Producto = new Producto{
-            Nombre = "Producto A",
-            Precio = new decimal(19.99)
-          },
-          Cantidad = 2
-        }
-      );
-
-      Productos.Add(
-        new CartItem{
-          Producto = new Producto{
-            Nombre = "Producto B",
-            Precio = new decimal(42.49)
-          },
-          Cantidad = 7
-        }
-      );
+      display = new List<string[]>();
+      foreach (var p in Productos)
+      {
+        display.Add(
+          new string[]
+          {
+            $"{p.Producto.Imagenes.ToList()[0].Imagen}",
+            $"{p.Producto.Nombre}",
+            $"{p.Cantidad}",
+            $"{formatDecimal(p.Producto.Precio)}",
+            $"{formatDecimal(p.Cantidad * p.Producto.Precio)}"
+          }
+        );
+      }
     }
-    else Productos.Clear();
-    StateHasChanged();
   }
 
 }

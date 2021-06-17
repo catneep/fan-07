@@ -1,0 +1,54 @@
+<table class="table is-striped is-narrow is-hoverable is-fullwidth">
+  <thead>
+    <tr>
+      <th class="img-cell"><!-- imagen --></th>
+      <th>Nombre</th>
+      <th><abbr title="Cantidad">Cant.</abbr></th>
+      <th>Precio</th>
+      <th>Subtotal</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (int i = 0; i < Rows.Count; i++)
+    {
+      var index = i;
+      <tr>
+        <td>
+          <figure class="image is-96x96">
+            <img src="@Rows[index][0]">
+          </figure>
+        </td>
+        <td>
+          @Rows[index][1]
+        </td>
+        <td>
+          @Rows[index][2]
+        </td>
+        <td>
+          $ @Rows[index][3]
+        </td>
+        <td>
+          $ @Rows[index][4]
+        </td>
+        <td>
+          <div class="buttons">
+            <button class="button">
+              -
+            </button>
+            <button class="button">
+              +
+            </button>
+            <button class="button is-danger">
+              Eliminar
+            </button>
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@code{
+  [Parameter] public List<string[]> Rows {get; set;}
+}

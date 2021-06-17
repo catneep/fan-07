@@ -68,35 +68,35 @@
     <div class="field">
       <label class="label">Categoría</label>
       <div class="control">
-        @if (_currentCategory != null)
-        {
-          <Embers.Bulma.Dropdown
-            @ref="dropCategorias"
-            Placeholder="@_currentCategory.Nombre"
-            Items="@nombresCategorias"
-          />
-        }
-        else
-        {
-          <Embers.Bulma.Dropdown
-            @ref="dropCategorias"
-            Placeholder="@nombresCategorias[0]"
-            Items="@nombresCategorias"
-          />
-        }
-        
+        <div class="select">
+          <select @onchange="ChangeCategory">
+            @foreach (var c in Categorias)
+            {
+              <option value="@c.Nombre">
+                @c.Nombre
+              </option>
+            }
+          </select>
+        </div>
       </div>
     </div>
 
-    @if (nombresCategorias != null && nombresCategorias.Count > 0)
+    @if (Subcategorias != null && Subcategorias.Count > 0)
     {
       <div class="field">
         <label class="label">Subcategoría</label>
         <div class="control">
-          <Embers.Bulma.Dropdown
-            @ref="dropSubcategorias"
-            Items="@nombresSubcategorias"
-          />
+          <div class="select">
+            <select @onchange="ChangeSubcategory">
+              @foreach (var s in Subcategorias)
+              {
+                <option
+                  value="@s.Nombre">
+                    @s.Nombre
+                </option>
+              }
+            </select>
+          </div>
         </div>
       </div>
     }
@@ -115,14 +115,23 @@
 @code{
   [Parameter] public Producto Producto {get; set;}
   [Parameter] public EventCallback OnValid {get; set;}
-  private Dropdown dropCategorias, dropSubcategorias;
+  private List<ImagenProducto> ImagenesProducto;
   private List<Categoria> Categorias;
   private List<Subcategoria> Subcategorias;
-  private List<string> nombresCategorias, nombresSubcategorias;
   private Categoria _currentCategory;
   private Subcategoria _currentSubcategory;
   private bool _Exists = false;
   private double _Precio = 0;
+  private async Task ChangeCategory(ChangeEventArgs e)
+  {
+      _currentCategory = await CatSrv.GetCategoryByName(e.Value.ToString());
+      await GetSubcategories(_currentCategory);
+      _currentSubcategory = Subcategorias[0];
+  }
+  private async Task ChangeSubcategory(ChangeEventArgs e)
+  {
+      _currentSubcategory = await CatSrv.GetSubcategoryByName(e.Value.ToString());
+  }
   private async Task GetSubcategories(Categoria c)
   {
     Subcategorias = new List<Subcategoria>();
@@ -140,25 +149,22 @@
     if (Producto == null)
     {
       Producto = new Producto();
-      _currentCategory = null;
+      _currentCategory = Categorias[0];
     }
     else
     {
-      _Exists = true;
-      _currentCategory = await CatSrv.GetForProduct(Producto);
-      await GetSubcategories(_currentCategory);
+      _Exists = await PrdtSrv.Exists(Producto);
+      if (_Exists)
+      {
+        _currentCategory = await CatSrv.GetForProduct(Producto);
+        await GetSubcategories(_currentCategory);
+      }
+      else
+      {
+        _currentCategory = Categorias[0];
+        await GetSubcategories(_currentCategory);
+      }
     }
-    buildNameLists();
-  }
-  private void buildNameLists()
-  {
-    nombresCategorias = new List<string>();
-    nombresSubcategorias = new List<string>();
-    foreach (var c in Categorias)
-      nombresCategorias.Add(c.Nombre);
-    if (_currentCategory != null)
-      foreach (var s in Subcategorias)
-        nombresCategorias.Add(s.Nombre);
   }
   public Task Invalid()
   {
@@ -169,9 +175,11 @@
   public async Task Valid()
   {
     Console.WriteLine($"Submitting form...");
+    Producto.Subcategoria = _currentSubcategory;
+    Producto.Precio = new decimal(_Precio);
+    Producto.Imagenes = ImagenesProducto;
     await OnValid.InvokeAsync();
-    Console.WriteLine($"ok kid");
-    NavMgr.NavigateTo("/", true);
+    Console.WriteLine($"Done!");
   }
   @* Manejo de archivos *@
   private List<IBrowserFile> loadedFiles = new();
@@ -180,7 +188,7 @@
   private bool isLoading;
   private async Task LoadFiles(InputFileChangeEventArgs e)
   {
-    Producto.Imagenes = new List<ImagenProducto>();
+    ImagenesProducto = new List<ImagenProducto>();
     isLoading = true;
     loadedFiles.Clear();
 
@@ -192,14 +200,14 @@
 
         var bytes = new byte[file.Size];
         await file.OpenReadStream(maxFileSize).ReadAsync(bytes, 0, bytes.Length);
-
         var base64 = Convert.ToBase64String(bytes);
-        Producto.Imagenes.Add(
+        ImagenesProducto.Add(
           new ImagenProducto{
             Producto = Producto,
-            Imagen = base64
+            Imagen = $"data:{file.ContentType};base64,{base64}"
           }
         );
+        Console.WriteLine($"Loaded: {file.Name} Type: {file.ContentType}");
       }
       catch (Exception ex)
       {

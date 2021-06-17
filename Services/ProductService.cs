@@ -10,6 +10,7 @@ namespace fan_07.Services
 {
     public interface IProductService
     {
+        Task<bool> Exists(Producto p);
         Task<Producto> Register(Producto p);
         Task<List<Producto>> Search(string filter);
         Task<List<Producto>> GetAll();
@@ -35,6 +36,11 @@ namespace fan_07.Services
             return p;
         }
 
+        public async Task<bool> Exists(Producto producto)
+        {
+            return await dbContext.Productos.AnyAsync(p => p.Id == producto.Id);
+        }
+
         public async Task<List<Producto>> GetAll()
         {
             return await dbContext.Productos.ToListAsync();
@@ -54,13 +60,30 @@ namespace fan_07.Services
 
         public async Task<Producto> GetById(string id)
         {
-            try{
+            try
+            {
                 var parse = Guid.Parse(id);
-                var producto = await dbContext.Productos.FirstAsync(p => p.Id == parse);
+
+                var producto =
+                    await dbContext.Productos
+                    .Include(p => p.Imagenes)
+                    .Include(p => p.Subcategoria)
+                    .ThenInclude(s => s.Categoria)
+                    .FirstAsync(p => p.Id == parse);
+
                 return producto;
-            } catch (FormatException e){
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine($"Error en formato {e}");
                 return null;
             }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Error {e}");
+                return null;
+            }
+            
         }
 
         public async Task<List<string>> GetImages(Producto producto)
@@ -69,7 +92,7 @@ namespace fan_07.Services
             
             var res = new List<string>();
 
-            if (images != null && images.Count > 1)
+            if (images != null && images.Count > 0)
                 foreach (var img in images)
                     res.Add(img.Imagen);
                 
@@ -94,6 +117,7 @@ namespace fan_07.Services
         public async Task<Producto> Register(Producto p)
         {
             await dbContext.Productos.AddAsync(p);
+            await dbContext.SaveChangesAsync();
             return p;
         }
 

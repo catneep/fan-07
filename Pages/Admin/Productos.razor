@@ -2,15 +2,16 @@
 @page "/hub/productos/{id}"
 @inject IProductService PrdtSrv
 
-<FormProducto @ref="form" OnValid="ValidSubmit" />
+<FormProducto @ref="form" Producto="@producto" OnValid="ValidSubmit" />
 
 @code{
   [Parameter] public string id {get; set;}
   private FormProducto form;
   private Producto producto;
-  private void ValidSubmit()
+  private async Task ValidSubmit()
   {
     Console.WriteLine($"Product form submitted");
+    await PrdtSrv.Register(producto);
   }
   protected async override Task OnParametersSetAsync()
   {

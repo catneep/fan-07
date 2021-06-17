@@ -1,17 +1,17 @@
 @page "/productos/{id}"
 @inject NavigationManager NavMgr
 @inject IProductService PrdtSrv
+@inject ICategoryService CatSrv
 @inject ICartService CartSrv
 
 <main>
   <div class="columns" style="padding: 2rem;">
     <div class="column is-8">
-        @* <ImageDisplay Images="@Images"/> *@
-        <ImageDisplay />
+        <ImageDisplay Images="@Images"/>
     </div>
     <div class="column">
         <div class="p-2 content">
-            <h4>@producto.Subcategoria.Nombre</h4>
+            <h4>@producto.Subcategoria.Categoria.Nombre</h4>
             <h1>@producto.Nombre</h1>
             <h2>$<b>@price<sup>@cents</sup></b></h2>
 
@@ -41,30 +41,25 @@
   [Parameter] public string id { get; set; }
   private List<string> Images;
   private Producto producto;
+  private Categoria categoria;
   private int price, cents;
   protected async override Task OnParametersSetAsync()
-  { 
+  {
     if (id != null && id != String.Empty){
       producto = await PrdtSrv.GetById(id);
-    }  
-    
-    @* else
-      NavMgr.NavigateTo("/404", true); *@
-
-    if (producto == null)
-      producto = new Producto{
-        Nombre = "Test",
-        Descripcion = "This is a test",
-        Precio = new decimal(1.2),
-        Existencia = 1,
-        Subcategoria = new Subcategoria{
-          Nombre = "Tests"
-        }
-      };
+      if (producto != null)
+      {
+        Images = await PrdtSrv.GetImages(producto);
+        categoria = await CatSrv.GetForProduct(producto);
+        setPrice(producto.Precio);
+      }
+      else
+        NavMgr.NavigateTo("/404", true);
+    }
+      
     else
-      Images = await PrdtSrv.GetImages(producto);
-
-    setPrice(producto.Precio);
+      NavMgr.NavigateTo("/404", true);
+    
   }
 
   private void AddToCart()
@@ -75,6 +70,7 @@
         Producto = producto
       }
     );
+    Console.WriteLine($"Added {producto.Nombre} to cart (Count: {CartSrv.Productos.Count})");
   }
 
   private void setPrice(decimal d)

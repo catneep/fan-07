@@ -41,7 +41,7 @@
           } else foreach (var product in Productos)
           {
             <div class="column is-3">
-              <ProductCard Product="@product" />
+              <ProductCard Producto="@product" />
             </div>
           }
         </section>
@@ -73,7 +73,7 @@
     OrderItems.Add("Mayor Precio");
   }
 
-  protected async override Task OnInitializedAsync()
+  protected override void OnInitialized()
   {
     startOrderCombo();
   }

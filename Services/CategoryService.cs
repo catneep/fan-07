@@ -14,6 +14,8 @@ namespace fan_07.Services
     {
         Task<Categoria> GetForProduct(Producto producto);
         Task<Categoria> GetCategory(string id);
+        Task<Categoria> GetCategoryByName(string name);
+        Task<Subcategoria> GetSubcategoryByName(string name);
         Task<ICollection<Categoria>> GetCategories();
         Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria);
         Task<Categoria> CreateCategory(Categoria categoria);
@@ -67,6 +69,11 @@ namespace fan_07.Services
             return await dbContext.Categorias.Where(c => c.Id == Guid.Parse(id)).FirstAsync();
         }
 
+        public async Task<Categoria> GetCategoryByName(string name)
+        {
+            return await dbContext.Categorias.Where(c => c.Nombre == name).FirstOrDefaultAsync();
+        }
+
         public async Task<Categoria> GetForProduct(Producto producto)
         {
             return await dbContext.Categorias.Where(c => c.Id == producto.Subcategoria.Categoria.Id).FirstOrDefaultAsync();
@@ -75,6 +82,12 @@ namespace fan_07.Services
         public async Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria)
         {
             return await dbContext.Subcategorias.Where(s => s.Categoria.Id == categoria.Id).ToListAsync();
+        }
+
+        public async Task<Subcategoria> GetSubcategoryByName(string name)
+        {
+            return
+                await dbContext.Subcategorias.Where(s => s.Nombre == name).FirstOrDefaultAsync();
         }
 
         public async Task<Categoria> ModifyCategory(Categoria categoria)
