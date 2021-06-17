@@ -27,7 +27,7 @@
     int decimales = (int) (((double) d ) * 100 - enteros * 100);
     return $"{enteros}.{decimales}";
   }
-  protected async override Task OnInitializedAsync()
+  protected override void OnInitialized()
   {
     Console.WriteLine($"Count: {CartSrv.Productos.Count}");
     Productos = CartSrv.Productos;

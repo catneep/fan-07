@@ -1,6 +1,6 @@
 @page "/"
 
-<section id="titulo" class="hero is-danger is-fullheight">
+<section id="titulo" class="hero is-fullheight">
     <div class="hero-body">
       <div class="">
         <p class="title">
@@ -127,7 +127,7 @@
           <button class="delete" aria-label="delete"></button>
         </div>
         <div class="message-body">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla.
+          @Testimonios[0]
         </div>
       </article>
     </div>
@@ -139,7 +139,7 @@
           <button class="delete" aria-label="delete"></button>
         </div>
         <div class="message-body">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla.
+          @Testimonios[1]
         </div>
       </article>
     </div>
@@ -151,14 +151,21 @@
           <button class="delete" aria-label="delete"></button>
         </div>
         <div class="message-body">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla.
+          @Testimonios[2]
         </div>
       </article>
     </div>
-    
   </div>
 </section>
 
 @code{
-
+  private string[] Testimonios;
+  protected override void OnInitialized()
+  {
+    Testimonios = new string[] {
+      "A",
+      "B",
+      "C"
+    };
+  }
 }
