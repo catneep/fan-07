@@ -1,0 +1,21 @@
+@*Registro de categoría*@
+@page "/hub/paqueterias/registro"
+
+@*Edición de categoría existente*@
+@page "/hub/paqueterias/{id}"
+
+<main>
+  <h1>Titulo</h1>
+  <div class="columns">
+    <div class="column">
+      <elpincheformulario Direccion="@direccion" OnValid="Test" />
+    </div>
+  </div>
+</main>
+
+@code{
+  private Direccion direccion;
+  private void Test(){
+    Console.WriteLine($"Hey");
+  }
+}
