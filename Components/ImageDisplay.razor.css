@@ -22,3 +22,9 @@
 #images > figure:hover{
     opacity: 100%;
 }
+
+#images figure.image{
+    max-width: 128px;
+    max-height: 128px;
+    overflow: hidden;
+}
