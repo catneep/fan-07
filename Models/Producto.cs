@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace fan_07.Models
 {
@@ -9,7 +10,7 @@ namespace fan_07.Models
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        [MinLength(1;ErrorMessage="Ingrese el genero M o F")]
+        [MinLength(1, ErrorMessage="Ingrese el genero M o F")]
         public string Genero { get; set; } = "N/A";
 
         [MinLength(3,ErrorMessage="Nombre de producto debe ser mayor a 5 caracteres")]
