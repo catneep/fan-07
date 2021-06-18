@@ -46,9 +46,13 @@ namespace fan_07
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddTransient<IAdminService, AdminService>();
+
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IMailingService, MailingService>();
+            services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ICategoryService, CategoryService>();
+
             services.AddSingleton<ICartService, CartService>();
         }
 

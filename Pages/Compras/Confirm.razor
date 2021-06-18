@@ -1,25 +1,80 @@
 @page "/carrito/pago/{result}"
+@inherits AuthenticatedComponent
+@inject ICartService CartSrv
+@inject IMailingService MailSrv
 @inject NavigationManager NavMgr
 
-<OrderCard>
-  Detalles de la orden lol
-</OrderCard>
+@if (ok)
+{
+  <div class="columns">
+    <div class="column is-2"></div>
+    <div class="column">
+      <h1 class="title">
+        ¡Gracias por tu compra!
+      </h1>
+      <OrderCard Pedido="@p">
+        <ul>
+          @if (p.Productos != null && p.Productos.Count > 0)
+          foreach (var producto in p.Productos)
+          {
+            <li>
+              @producto.Nombre
+            </li>
+          }
+        </ul>
+      </OrderCard>
+    </div>
+    <div class="column is-2"></div>
+  </div>
+}
+
+<Embers.Bulma.Modal @ref="failModal">
+  <div class="box content">
+    <h1>¡Algo salió mal!</h1>
+    <p>
+      Tu pago fue rechazado, intenta <a href="/carrito">nuevamente</a>.
+    </p>
+  </div>
+</Embers.Bulma.Modal>
 
 @code{
   [Parameter] public string result {get; set;}
+  private Embers.Bulma.Modal failModal;
+  private bool ok = false;
+  private Pedido p = new Pedido();
+  protected async override Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    if (_currentUser == null)
+      NavMgr.NavigateTo("/404", true);
+  }
   protected async override Task OnParametersSetAsync()
   {
     switch(result){
       case "success":
         Console.WriteLine($"Order created");
-        
+        ok = true;
+
+        p = CartSrv.Checkout();
+        p.Usuario = _currentUser;
+        p = await MailSrv.Create(p);
+        CartSrv.Productos.Clear();
+
         break;
       case "failed":
-      Console.WriteLine($"Order not created");
+        Console.WriteLine($"Order not created");
         break;
       default:
         NavMgr.NavigateTo("/404", true);
         break;
+    }
+  }
+
+  protected override void OnAfterRender(bool isFirstRender)
+  {
+    if (isFirstRender && !ok)
+    {
+      failModal.makeVisible();
     }
   }
 }

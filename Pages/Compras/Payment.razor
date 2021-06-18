@@ -1,6 +1,8 @@
 @page "/carrito/pago"
 @inherits AuthenticatedComponent
 @inject ICartService CartSrv
+@inject IMailingService MailSrv
+@inject IPaymentService PaySrv
 @inject NavigationManager NavMgr
 
 <AuthorizeView>
@@ -10,14 +12,33 @@
         <div class="column is-2"></div>
         <div class="column">
           <div class="box content">
-            <h3>Seleccionar Dirección de Entrega</h3>
-            <select class="dropdown">
-              <option value="A">A</option>
-            </select>
-            <br>
-            <hr>
-            <h3>Nueva Dirección</h3>
-            <FormDireccion OnValid="Test" />
+            <div id="options" class="columns">
+              <div class="column">
+                <h3>
+                  Selecciona tu Dirección de Entrega
+                </h3>
+                <Embers.Bulma.Dropdown
+                  @ref="dropDireccion"
+                  Placeholder="Seleccionar Dirección"
+                  Items="_direcciones"
+                />
+                <br>
+                <hr>
+                <h3>Nueva Dirección</h3>
+                <FormDireccion OnValid="SubmitForm" />
+              </div>
+
+              <div class="column">
+                <h3>
+                  Selecciona tu Medio de Pago
+                </h3>
+                <Embers.Bulma.Dropdown
+                  @ref="dropPago"
+                  Placeholder="Seleccionar tarjeta"
+                  Items="_mediosdepago"
+                />
+              </div>
+            </div>
           </div>
           <button class="button is-primary" @onclick="Complete">
             Simular Pago
@@ -31,15 +52,42 @@
 
 @code{
   private FormDireccion form;
-  private void Test()
+  private Dropdown dropPago, dropDireccion;
+  private List<Direccion> Direcciones;
+  private List<Pago> MediosDePago;
+  private List<string> _direcciones, _mediosdepago;
+  private void GetStrings()
+  {
+    _direcciones = new List<string>();
+    foreach(var i in Direcciones)
+    {
+      _direcciones.Add(i.Domicilio);
+    }
+
+    _mediosdepago = new List<string>();
+    foreach(var i in MediosDePago)
+    {
+      _direcciones.Add($"XXXX-XXXX-XXXX-{i.Numero.Substring(12)}");
+    }
+  }
+  private void SubmitForm()
   {
     Console.WriteLine($"submit");
   }
   protected async override Task OnInitializedAsync()
   {
+    if (CartSrv.Productos.Count < 1)
+      NavMgr.NavigateTo("/carrito", true);
+
     await base.OnInitializedAsync();
     if (_currentUser == null)
       NavMgr.NavigateTo("/Identity/Account/Register", true);
+    else
+    {
+      Direcciones = await MailSrv.GetDirecciones(_currentUser);
+      MediosDePago = await PaySrv.GetMethods(_currentUser);
+      GetStrings();
+    }
   }
   private void Complete()
   {

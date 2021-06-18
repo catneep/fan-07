@@ -9,12 +9,20 @@ namespace fan_07.Services
     {
         List<CartItem> Productos { get; set; }
         decimal Total();
+        Pedido Checkout();
         int Count();
+        Direccion Direccion { get; set; }
+        Pago MetodoPago { get; set; }
     }
 
     public class CartService : ICartService
     {
+        public List<CartItem> Productos { get; set; }
+        public Direccion Direccion { get; set; }
+        public Pago MetodoPago { get; set; }
         public CartService(){
+            Direccion = null;
+            MetodoPago = null;
             if (Productos == null)
                 Productos = new List<CartItem>();
         }
@@ -28,19 +36,6 @@ namespace fan_07.Services
             }
             return result;
         }
-
-        public List<CartItem> Productos { get; set; }
-
-        // public async Task<Pedido> Checkout(ApplicationUser user, string direccion)
-        // {
-        //     Pedido p = new Pedido{
-        //         Total = Total(),
-        //         Usuario = user,
-        //         Direccion = direccion
-        //     };
-        //     return p;
-        // }
-
         public decimal Total()
         {
             decimal total = new decimal();
@@ -49,6 +44,24 @@ namespace fan_07.Services
                 total += item.Producto.Precio * item.Cantidad;
             }
             return total;
+        }
+        public Pedido Checkout()
+        {
+            var p = new Pedido();
+            if (Direccion == null)
+                p.Direccion = "Test Address";
+            else
+                p.Direccion = this.Direccion.Domicilio;
+            p.Total = Total();
+
+            var list = new List<Producto>();
+            foreach (var prod in Productos){
+                list.Add(prod.Producto);
+                Console.WriteLine($"Añadido: {prod.Producto.Id.ToString()} a Pedido");
+            }
+
+            p.Productos = list;
+            return p;
         }
     }
 }

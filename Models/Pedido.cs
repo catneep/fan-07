@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace fan_07.Models
 {
@@ -10,5 +11,6 @@ namespace fan_07.Models
         public ApplicationUser Usuario { get; set; }
         public Envio Envio { get; set; } = null;
         public string Direccion { get; set; }
+        public List<Producto> Productos { get; set; }
     }
 }

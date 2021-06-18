@@ -5,7 +5,16 @@
 
 <main>
   <h1 class="title">Pedido</h1>
-  <h2 class="subtitle"></h2>
+  <h2 class="subtitle">@Pedido.Id</h2>
+  <ul>
+    @if (Pedido.Productos != null && Pedido.Productos.Count > 0)
+    foreach (var producto in Pedido.Productos)
+    {
+      <li>
+        @producto.Nombre
+      </li>
+    }
+  </ul>
 </main>
 
 @code{

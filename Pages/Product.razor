@@ -78,7 +78,7 @@
         Producto = producto
       }
     );
-    Console.WriteLine($"Added {producto.Nombre} to cart (Count: {CartSrv.Productos.Count})");
+    Console.WriteLine($"Added {producto.Id.ToString()} to cart (Count: {CartSrv.Productos.Count})");
   }
 
   private void setPrice(decimal d)
