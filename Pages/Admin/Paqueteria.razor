@@ -2,21 +2,21 @@
 @page "/hub/paqueterias/registro"
 
 @*Edición de categoría existente*@
-@page "/hub/paqueterias/{id}"
+
 
 <main>
-  <h1>Titulo</h1>
+  <h1>Paqueteria</h1>
   <div class="columns">
     <div class="column is-2"></div>
     <div class="column">
-      <elpincheformulario Direccion="@direccion" OnValid="Test" />
+      <FormPaqueteria Distribuidor="@Distribuidor" OnValid="Test" />
     </div>
     <div class="column is-2"></div>
   </div>
 </main>
 
 @code{
-  private Direccion direccion;
+  private Distribuidor Distribuidor;
   private void Test(){
     Console.WriteLine($"Hey");
   }
