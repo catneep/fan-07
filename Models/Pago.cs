@@ -4,9 +4,16 @@ namespace fan_07.Models
 {
     public class Pago
     {
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
+
+        [MinLength(3,ErrorMessage="Nombre de usuario debe ser mayor a 5 caracteres")]
         public ApplicationUser Usuario { get; set; }
+
+        [MaxLength(3,ErrorMessage="Numero debe ser menor a 4 digitos")]
         public string Numero { get; set; }
+
+        [MinLength(10,ErrorMessage="Ingresa una fecha en formato DD/MM/AAAA")]
         public string Fecha { get; set; }
     }
 }
