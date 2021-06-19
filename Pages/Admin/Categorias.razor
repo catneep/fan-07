@@ -1,6 +1,7 @@
 @page "/hub/categorias/registro"
 @page "/hub/categorias/{id}"
 @page "/hub/categorias/{id}/edit"
+@inject NavigationManager NavMgr
 @inject ICategoryService CatSrv
 
 <h1 class="title">Categoría</h1>
@@ -35,11 +36,13 @@
       _Subcategorias = new List<Subcategoria>();
       _Categoria.Subcategorias = _Subcategorias;
     }
+
+    categoria._Exists = !(_Exists && NavMgr.Uri.ToString().Contains("edit"));
   }
   private async Task Test()
   {
     Console.WriteLine($"It was valid!\nRegistering...");
     await CatSrv.CreateCategory(categoria.Categoria);
-    Console.WriteLine($"Yay!");
+    NavMgr.NavigateTo("/hub");
   }
 }

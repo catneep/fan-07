@@ -1,0 +1,95 @@
+@inject NavigationManager NavMgr
+
+<table class="table is-striped is-narrow is-hoverable is-fullwidth">
+  <thead>
+    <tr>
+      <th><!-- # --></th>
+      <th>Fecha</th>
+      <th># Productos</th>
+      <th>Distribuidor</th>
+      <th>Destino</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (int i = 0; i < Pedidos.Count; i++)
+    {
+      var index = i;
+      <tr>
+        <td>
+          @(index + 1)
+        </td>
+        <td>
+          @Pedidos[index].Fecha
+        </td>
+        <td>
+          @Pedidos[index].Productos.Count
+        </td>
+        <td>
+          @Pedidos[index].Envio.Distribuidor.Nombre
+        </td>
+        <td>
+          @Pedidos[index].Direccion
+        </td>
+        <td>
+          @GetStatus(Pedidos[index].Envio.Estado)
+        </td>
+        <td>
+          <div class="buttons">
+            <button class="button is-info is-inverted is-small"
+            @onclick="() => Go(Pedidos[index])">
+              <span class="oi" data-glyph="eye" /> 
+              Ver Detalles
+            </button>
+            <button class="button is-info is-inverted is-small"
+            @onclick="() => Edit(Pedidos[index])">
+              <span class="oi" data-glyph="pencil" /> 
+              Editar
+            </button>
+            <button class="button is-danger is-small"
+            @onclick="() => Delete(Pedidos[index])">
+              <span class="oi" data-glyph="trash" /> 
+              Eliminar
+            </button>
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@code{
+  [Parameter] public List<Pedido> Pedidos {get; set;}
+  [Parameter] public EventCallback<Pedido> DeleteHandler {get; set;}
+  private string GetStatus(int i)
+  {
+    switch (i){
+      default:
+      case 0:
+        return "Pendiente de recolección";
+      case 1:
+        return "Pendiente de envío";
+      case 2:
+        return "En ruta";
+      case 3:
+        return "Completado";
+    }
+  }
+
+  private void Go(Pedido c)
+  {
+    NavMgr.NavigateTo($"/hub/pedidos/{c.Id}");
+  }
+
+  private void Edit(Pedido c)
+  {
+    NavMgr.NavigateTo($"/hub/pedidos/{c.Id}/edit");
+  }
+
+  private async void Delete(Pedido c)
+  {
+    await DeleteHandler.InvokeAsync(c);
+  }
+
+}

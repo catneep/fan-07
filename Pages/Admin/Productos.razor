@@ -1,6 +1,7 @@
 @page "/hub/productos/registro"
 @page "/hub/productos/{id}"
 @page "/hub/productos/{id}/edit"
+@inject NavigationManager NavMgr
 @inject IProductService PrdtSrv
 
 <FormProducto @ref="form" Producto="@producto" OnValid="ValidSubmit" />
@@ -19,6 +20,7 @@
     if (id != null && id != String.Empty && id != "registro")
     {
       producto = await PrdtSrv.GetById(id);
+      form._Exists = !(producto != null && NavMgr.Uri.ToString().Contains("edit"));
     }
     else
       producto = new Producto();

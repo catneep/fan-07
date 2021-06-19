@@ -18,6 +18,14 @@
   Agregar
 </a>
 
+<h1 class="title">Pedidos</h1>
+<TableProductos Pedidos="@Pedidos" DeleteHandler="DeletePedido" />
+<a class="button is-primary" href="/hub/pedidos/registro">
+  Agregar
+</a>
+
+<h1 class="title">Distribuidores</h1>
+<!--TODO-->
 
 <Embers.Bulma.Modal @ref="deleteDialog">
   <div class="box content has-text-centered">
@@ -40,9 +48,11 @@
   private List<Categoria> Categorias;
   private List<Producto> Productos;
   private List<Distribuidor> Distribuidores;
+  private List<Pedido> Pedidos;
   private Producto productoTemp;
   private Categoria categoriaTemp;
   private Distribuidor distTemp;
+  private Pedido pedidoTemp;
   private void Cancel()
   {
     categoriaTemp = null;
@@ -56,6 +66,9 @@
       await ProdSrv.Delete(productoTemp);
     if (categoriaTemp != null)
       await CatSrv.DeleteCategory(categoriaTemp);
+    if (pedidoTemp != null)
+      await MailSrv.Delete(pedidoTemp);
+    
     NavMgr.NavigateTo("/hub", true);
   }
   private void DeleteProduct(Producto p)
@@ -68,6 +81,11 @@
     categoriaTemp = p;
     deleteDialog.makeVisible();
   }
+  private void DeletePedido(Pedido p)
+  {
+    pedidoTemp = p;
+    deleteDialog.makeVisible();
+  }
   protected async override Task OnInitializedAsync()
   {
     var c = await CatSrv.GetCategories();
@@ -75,5 +93,11 @@
 
     var p = await ProdSrv.GetAll();
     Productos = p.ToList();
+
+    var pd = await MailSrv.GetPedidos();
+    Pedidos = pd.ToList();
+
+    var d = await MailSrv.GetDistribuidores();
+    Distribuidores = d.ToList();
   }
 }

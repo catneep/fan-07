@@ -12,6 +12,7 @@ namespace fan_07.Services
     {
         Task<Distribuidor> RegisterDistribuidor(Distribuidor d);
         Task<Distribuidor> GetDistribuidor(string id);
+        Task<List<Distribuidor>> GetDistribuidores();
         Task<Pedido> GetPedido(string id);
         Task<List<Pedido>> GetPedidos();
         Task<List<Pedido>> GetPedidos(ApplicationUser user);
@@ -132,14 +133,21 @@ namespace fan_07.Services
             return pedido;
         }
 
-        public Task<Distribuidor> RegisterDistribuidor(Distribuidor d)
+        public async Task<Distribuidor> RegisterDistribuidor(Distribuidor d)
         {
-            throw new NotImplementedException();
+            await dbContext.Distribuidores.AddAsync(d);
+            await dbContext.SaveChangesAsync();
+            return d;
         }
 
-        public Task<Distribuidor> GetDistribuidor(string id)
+        public async Task<Distribuidor> GetDistribuidor(string id)
         {
-            throw new NotImplementedException();
+            return await dbContext.Distribuidores.Where(d => d.Id == Guid.Parse(id)).FirstAsync();
+        }
+
+        public async Task<List<Distribuidor>> GetDistribuidores()
+        {
+            return await dbContext.Distribuidores.ToListAsync();
         }
     }
 }

@@ -1,0 +1,68 @@
+@implements IForm
+
+<EditForm
+  Model="@pago"
+  OnInvalidSubmit="@Invalid"
+  OnValidSubmit="@Valid">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <fieldset disabled="@_Exists">
+    <div class="field">
+      <label class="label">Número</label>
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Nombre"
+          @bind-value="pago.Numero">
+      </div>
+    </div>
+
+    <label class="label">Fecha de Vencimiento</label>
+    <div class="field is-grouped">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Subcategoría"
+          @bind-value="pago.Fecha">
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button type="submit" class="button is-success">Aceptar</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger is-light">Cancelar</button>
+      </div>
+    </div>
+  </fieldset>
+</EditForm>
+
+@code{
+  [Parameter] public Pago pago {get; set;}
+  [Parameter] public EventCallback OnValid {get; set;}
+  public bool _Exists = false;
+  protected override void OnParametersSet()
+  {
+    if (pago == null)
+      pago = new Pago();
+  }
+
+  public Task Invalid()
+  {
+    //TODO: Display error messages
+    Console.WriteLine($"Form not valid!");
+    return Task.FromResult<bool>(true);
+  }
+
+  public async Task Valid()
+  {
+    await OnValid.InvokeAsync();
+  }
+
+}

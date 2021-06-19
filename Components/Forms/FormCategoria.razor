@@ -56,7 +56,7 @@
   [Parameter] public EventCallback OnValid {get; set;}
   private readonly string[] _Headers = {"Subcategorías"};
   private List<string[]> _Rows;
-  private bool _Exists = false;
+  public bool _Exists = false;
   private string _Subcategoria = String.Empty;
   protected override void OnParametersSet()
   {
