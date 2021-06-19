@@ -45,7 +45,14 @@
   </section>
 </main>
 
+<Embers.Bulma.Modal @ref="addModal">
+  <div class="notification is-primary">
+    ¡Producto añadido a tu carrito!
+  </div>
+</Embers.Bulma.Modal>
+
 @code{
+  private Modal addModal;
   [Parameter] public string id { get; set; }
   private List<string> Images;
   private Producto producto;
@@ -78,7 +85,7 @@
         Producto = producto
       }
     );
-    Console.WriteLine($"Added {producto.Id.ToString()} to cart (Count: {CartSrv.Productos.Count})");
+    addModal.makeVisible();
   }
 
   private void setPrice(decimal d)

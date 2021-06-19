@@ -1,10 +1,22 @@
-@* Aquí el admin literal ve todo *@
 @page "/hub"
+@inherits AuthenticatedComponent
+
 @inject ICategoryService CatSrv
 @inject IProductService ProdSrv
 @inject IMailingService MailSrv
 @inject IAdminService AdminSrv
+
 @inject NavigationManager NavMgr
+
+<section class="hero is-halfheight">
+  <div class="hero-body">
+    <div>
+      <p class="title">
+        Administración Fan-07
+      </p>
+    </div>
+  </div>
+</section>
 
 <h1 class="title">Categorias</h1>
 <TableCategorias Categorias="@Categorias" DeleteHandler="DeleteCategory" />
@@ -44,6 +56,7 @@
 </Embers.Bulma.Modal>
 
 @code{
+  private Dropdown option;
   private Modal deleteDialog;
   private List<Categoria> Categorias;
   private List<Producto> Productos;
@@ -88,6 +101,11 @@
   }
   protected async override Task OnInitializedAsync()
   {
+    await base.OnInitializedAsync();
+
+    if (_currentUser == null)
+      NavMgr.NavigateTo("/404", true);
+
     var c = await CatSrv.GetCategories();
     Categorias = c.ToList();
 
