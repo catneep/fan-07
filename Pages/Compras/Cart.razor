@@ -4,8 +4,20 @@
 @inject NavigationManager NavMgr
 
 <main>
-  <div class="content">
-    <h1>Mi Carrito</h1>
+  <div class="content level">
+    <div class="level-left">
+      <h1>Mi Carrito</h1>
+    </div>
+    <AuthorizeView>
+      <Authorized>
+        <div class="level-right">
+          <a href="/pedidos">
+            <span class="oi" data-glyph="clock" />
+            Ver Pedidos Anteriores
+          </a>
+        </div>
+      </Authorized>
+    </AuthorizeView>
   </div>
   @if (CartSrv.Productos.Count > 0)
   {
@@ -54,6 +66,8 @@
     </div>
   }
 </main>
+
+<FanFooter />
 
 @code{
   private List<string[]> display;

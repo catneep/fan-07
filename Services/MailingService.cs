@@ -10,6 +10,8 @@ namespace fan_07.Services
 {
     public interface IMailingService
     {
+        Task<Distribuidor> RegisterDistribuidor(Distribuidor d);
+        Task<Distribuidor> GetDistribuidor(string id);
         Task<Pedido> GetPedido(string id);
         Task<List<Pedido>> GetPedidos();
         Task<List<Pedido>> GetPedidos(ApplicationUser user);
@@ -92,6 +94,8 @@ namespace fan_07.Services
                         .Include(p => p.Envio)
                         .ThenInclude(e => e.Distribuidor)
 
+                        .Include(p => p.Usuario)
+
                         .FirstAsync();
             } catch (Exception e){
                 Console.WriteLine($"{e.Message}");
@@ -126,6 +130,16 @@ namespace fan_07.Services
             dbContext.Pedidos.Update(pedido);
             await dbContext.SaveChangesAsync();
             return pedido;
+        }
+
+        public Task<Distribuidor> RegisterDistribuidor(Distribuidor d)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Distribuidor> GetDistribuidor(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

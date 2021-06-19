@@ -1,8 +1,6 @@
-@*Registro de categoría*@
 @page "/hub/categorias/registro"
-
-@*Edición de categoría existente*@
 @page "/hub/categorias/{id}"
+@page "/hub/categorias/{id}/edit"
 @inject ICategoryService CatSrv
 
 <h1 class="title">Categoría</h1>
@@ -10,14 +8,13 @@
 
 @code{
   [Parameter] public string id {get; set;}
-  private bool _Exists;
+  private bool _Exists = false;
   private Categoria _Categoria;
   private List<Subcategoria> _Subcategorias;
   private FormCategoria categoria;
   protected override void OnInitialized()
   {
-    if (id == null || id == String.Empty)
-      _Exists = false;
+    _Exists = (id != null && id != String.Empty);
   }
   protected async override Task OnParametersSetAsync()
   {
@@ -26,11 +23,16 @@
       if (_Categoria != null)
       {
         var s = await CatSrv.GetSubcategories(_Categoria);
+        //var s = _Categoria.Subcategorias;
         if (s != null && s.Count > 0)
           _Subcategorias = s.ToList();
         else
           _Subcategorias = new List<Subcategoria>();
       }
+      _Categoria.Subcategorias = _Subcategorias;
+    } else {
+      _Categoria = new Categoria();
+      _Subcategorias = new List<Subcategoria>();
       _Categoria.Subcategorias = _Subcategorias;
     }
   }

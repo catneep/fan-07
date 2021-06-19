@@ -2,25 +2,71 @@
 @page "/hub"
 @inject ICategoryService CatSrv
 @inject IProductService ProdSrv
+@inject IMailingService MailSrv
+@inject IAdminService AdminSrv
+@inject NavigationManager NavMgr
 
 <h1 class="title">Categorias</h1>
-@* <Embers.Bulma.Table /> *@
+<TableCategorias Categorias="@Categorias" DeleteHandler="DeleteCategory" />
+<a class="button is-primary" href="/hub/categorias/registro">
+  Agregar
+</a>
 
 <h1 class="title">Productos</h1>
-@* <Embers.Bulma.Table /> *@
+<TableProductos Productos="@Productos" DeleteHandler="DeleteProduct" />
+<a class="button is-primary" href="/hub/productos/registro">
+  Agregar
+</a>
+
+
+<Embers.Bulma.Modal @ref="deleteDialog">
+  <div class="box content has-text-centered">
+    <h1>Advertencia</h1>
+    <p>¿Estás seguro que deseas eliminar este elemento?</p>
+
+    <div class="buttons">
+      <button class="button is-info" @onclick="Cancel">
+        Cancelar
+      </button>
+      <button class="button is-danger" @onclick="() => ConfirmDelete()">
+        Continuar
+      </button>
+    </div>
+  </div>
+</Embers.Bulma.Modal>
 
 @code{
+  private Modal deleteDialog;
   private List<Categoria> Categorias;
   private List<Producto> Productos;
-  private List<ApplicationUser> Usuarios;
   private List<Distribuidor> Distribuidores;
-  private readonly string[] _headerCategorias = {"Nombre"};
-  private readonly string[] _headerProductos = {"Nombre", "Categoria", "Subcategoria"};
-  private readonly string[] _headerUsuarios = {"Email", "Nombre(s)", "Apellido(s)", "Hash"};
-  private readonly string[] _headerDistribuidores = {""};
-  private void buildRows()
+  private Producto productoTemp;
+  private Categoria categoriaTemp;
+  private Distribuidor distTemp;
+  private void Cancel()
   {
-
+    categoriaTemp = null;
+    productoTemp = null;
+    distTemp = null;
+    deleteDialog.makeVisible();
+  }
+  private async Task ConfirmDelete()
+  {
+    if (productoTemp != null)
+      await ProdSrv.Delete(productoTemp);
+    if (categoriaTemp != null)
+      await CatSrv.DeleteCategory(categoriaTemp);
+    NavMgr.NavigateTo("/hub", true);
+  }
+  private void DeleteProduct(Producto p)
+  {
+    productoTemp = p;
+    deleteDialog.makeVisible();
+  }
+  private void DeleteCategory(Categoria p)
+  {
+    categoriaTemp = p;
+    deleteDialog.makeVisible();
   }
   protected async override Task OnInitializedAsync()
   {

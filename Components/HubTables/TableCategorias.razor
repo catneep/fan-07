@@ -1,0 +1,69 @@
+@inject NavigationManager NavMgr
+
+<table class="table is-striped is-narrow is-hoverable is-fullwidth">
+  <thead>
+    <tr>
+      <th><!-- # --></th>
+      <th>Nombre</th>
+      <th># Subcategorías</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (int i = 0; i < Categorias.Count; i++)
+    {
+      var index = i;
+      <tr>
+        <td>
+          @(index + 1)
+        </td>
+        <td>
+          @Categorias[index].Nombre
+        </td>
+        <td>
+          @Categorias[index].Subcategorias.Count
+        </td>
+        <td>
+          <div class="buttons">
+            <button class="button is-info is-inverted is-small"
+            @onclick="() => Go(Categorias[index])">
+              <span class="oi" data-glyph="eye" /> 
+              Ver Detalles
+            </button>
+            <button class="button is-info is-inverted is-small"
+            @onclick="() => Edit(Categorias[index])">
+              <span class="oi" data-glyph="pencil" /> 
+              Editar
+            </button>
+            <button class="button is-danger is-small"
+            @onclick="() => Delete(Categorias[index])">
+              <span class="oi" data-glyph="trash" /> 
+              Eliminar
+            </button>
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@code{
+  [Parameter] public List<Categoria> Categorias {get; set;}
+  [Parameter] public EventCallback<Categoria> DeleteHandler {get; set;}
+
+  private void Go(Categoria c)
+  {
+    NavMgr.NavigateTo($"/hub/categorias/{c.Id}");
+  }
+
+  private void Edit(Categoria c)
+  {
+    NavMgr.NavigateTo($"/hub/categorias/{c.Id}/edit");
+  }
+
+  private async void Delete(Categoria c)
+  {
+    await DeleteHandler.InvokeAsync(c);
+  }
+
+}

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using fan_07.Data;
 using fan_07.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace fan_07.Services
 {
@@ -32,59 +34,65 @@ namespace fan_07.Services
             dbContext = db;
         }
 
-        public Task<Distribuidor> CreateDistribuidor(Distribuidor d)
+        public async Task<Distribuidor> CreateDistribuidor(Distribuidor d)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApplicationUser> CreateUser(ApplicationUser user)
+        public async Task<ApplicationUser> CreateUser(ApplicationUser user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Distribuidor> DeleteDistribuidor(Distribuidor d)
+        public async Task<Distribuidor> DeleteDistribuidor(Distribuidor d)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApplicationUser> DeleteUser(ApplicationUser user)
+        public async Task<ApplicationUser> DeleteUser(ApplicationUser user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Distribuidor> EditDistribuidor(Distribuidor d)
+        public async Task<Distribuidor> EditDistribuidor(Distribuidor d)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApplicationUser> EditUser(ApplicationUser user)
+        public async Task<ApplicationUser> EditUser(ApplicationUser user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Distribuidor> GetDistribuidor(string id)
+        public async Task<Distribuidor> GetDistribuidor(string id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Distribuidor>> GetDistribuidores()
+        public async Task<List<Distribuidor>> GetDistribuidores()
+        {
+            return await dbContext.Distribuidores.ToListAsync();
+        }
+
+        public async Task<IdentityRole> GetRoles(ApplicationUser user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IdentityRole> GetRoles(ApplicationUser user)
+        public async Task<ApplicationUser> GetUser(string id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ApplicationUser> GetUser(string id)
+        public async Task<List<ApplicationUser>> GetUsers()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<ApplicationUser>> GetUsers()
-        {
-            throw new System.NotImplementedException();
+            var l = await dbContext.Users.ToListAsync();
+            List<ApplicationUser> result = new();
+            foreach (var u in l)
+            {
+                l.Add(new ApplicationUser{Id = u.Id});
+            }
+            return result;
         }
     }
 }

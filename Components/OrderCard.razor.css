@@ -16,3 +16,11 @@ section{
 #bottom{
     padding: 2.5rem;
 }
+
+a{
+    color: white;
+}
+
+a:hover{
+    color: lightblue;
+}

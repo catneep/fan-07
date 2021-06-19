@@ -31,6 +31,10 @@
       </div>
 
       <div class="buttons">
+        <button class="button is-outlined" @onclick="GoToCatalog">
+          <span class="icon has-text-info oi" data-glyph="box">
+          </span>
+        </button>
         <button class="button is-outlined" @onclick="GoToCart">
           <span class="icon has-text-info oi" data-glyph="cart">
           </span>
@@ -52,6 +56,11 @@
       _query = e.Value.ToString();
   }
 
+  private void GoToCatalog()
+  {
+    NavMgr.NavigateTo("/catalogo", true);
+  }
+
   private void GoToRegister()
   {
     if (_currentUser == null){
@@ -70,7 +79,7 @@
   {
     if ((e.Code == "Enter" || e.Code == "NumpadEnter")  && (_query != null && _query.Trim() != String.Empty))
     {
-      NavMgr.NavigateTo($"/catalogo/search/{_query}", true);
+      NavMgr.NavigateTo($"/catalogo/search/{_query}/1", true);
     }
   }
 

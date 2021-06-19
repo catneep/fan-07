@@ -53,6 +53,8 @@
   </div>
 </main>
 
+<FanFooter />
+
 @code{
   [Parameter] public string query {get; set;} = String.Empty;
   [Parameter] public string filter {get; set;}
@@ -88,6 +90,10 @@
       Productos = await PrdtSrv.Search(query);
       if (Productos == null)
         Productos = new List<Producto>();
+    }
+    else
+    {
+      Productos = await PrdtSrv.GetByPage(index);
     }
   }
 }

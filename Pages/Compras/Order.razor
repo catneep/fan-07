@@ -4,33 +4,117 @@
 @inject NavigationManager NavMgr
 
 <main>
-  <h1 class="title">Pedido</h1>
-  <h2 class="subtitle">@Pedido.Id</h2>
-  <ul>
-    @if (Pedido.Productos != null && Pedido.Productos.Count > 0)
-    foreach (var producto in Pedido.Productos)
-    {
-      <li>
-        @producto.Nombre
-      </li>
-    }
-  </ul>
+  <div class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/">Inicio</a></li>
+        <li><a href="#">Mi Cuenta</a></li>
+        <li><a href="/pedidos">Mis Compras</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Mis Envíos</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="subtitle" style="margin-left: 3rem;">
+        Llegando: @Pedido.Envio.FechaEstimada.ToString().Substring(0, 11)
+      </h2>
+    </div>
+
+    <div class="columns" id="product-detail">
+      <div class="column is-5"></div>
+      <div class="column is-1">
+        @if (Pedido.Productos != null && Pedido.Productos.Count > 0)
+        {
+          <figure class="image is-128x128">
+            <!-- img src="/img/helmet.jpg" -->
+            <img src="@Pedido.Productos[0].Imagenes.ToList()[0].Imagen">
+          </figure>
+        }
+      </div>
+      <div class="column is-3">
+        @if (Pedido.Productos != null && Pedido.Productos.Count > 0)
+        {
+          <h1 class="title">
+            @Pedido.Productos[0].Nombre
+          </h1>
+            @if (Pedido.Productos.Count > 1)
+            {
+              <h2 class="subtitle">y @(Pedido.Productos.Count - 1) más</h2>
+            }
+          <a class="button is-primary"
+            href="/productos/@Pedido.Productos[0].Id">
+              Ver Ahora
+          </a>
+        }
+      </div>
+      <div class="column is-3"></div>
+    </div>
+  
+    <div id="update-graph">
+      <img src="/img/updates.png" alt="placeholder">
+    </div>
+
+    <div class="columns has-text-centered" id="update-detail">
+      <div class="column is-3"></div>
+      <div class="column is-6">
+        <h1 class="title">Actualizaciones</h1>
+        <div class="box">
+          @for (int i = Pedido.Envio.Estado; i >= 0; i--)
+          {
+            <article class="media">
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    <strong>@updates[i][0]</strong>
+                    <br>
+                    @updates[i][1]
+                  </p>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+        <div class="column is-3"></div>
+      </div>
+    </div>
 </main>
+
+<FanFooter />
 
 @code{
   [Parameter] public string id {get; set;}
   private Pedido Pedido;
+  private List<string[]> updates;
+  private void startUpdates()
+  {
+    updates = new List<string[]>();
+    updates.Add(new string[] {
+      "Pedido Creado",
+      "Tu orden fue creada correctamente, ¡Gracias por tu preferencia!"});
+    updates.Add(new string[] {
+      "Paquete Recolectado",
+      "Tu paquete ha salido de nuestro almacén y se encuentra en manos de la paquetería, ¡Ya Casi!"});
+    updates.Add(new string[] {
+      "En Ruta",
+      "La paquetería se encuentra en ruta para entregar tu pedido, ¡Solo un poco más!"});
+    updates.Add(new string[] {
+      "Orden Completa",
+      "Tu paquete fue recibido en el domicilio indicado, ¡Vuelve pronto!"});
+  }
   protected async override Task OnInitializedAsync()
   {
     await base.OnInitializedAsync();
     if (_currentUser == null)
       NavMgr.NavigateTo("/404", true);
+    startUpdates();
   }
   protected async override Task OnParametersSetAsync()
   {
     if (id != null && id != String.Empty)
     {
       Pedido = await MailSrv.GetPedido(id);
+      Console.WriteLine($"Pedido {Pedido.Id} con {Pedido.Productos.Count} productos");
+      
+      if (Pedido.Usuario.Id != _currentUser.Id)
+        NavMgr.NavigateTo("/404", true);
     }
   }
 }

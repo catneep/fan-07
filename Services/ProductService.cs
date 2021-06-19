@@ -14,6 +14,7 @@ namespace fan_07.Services
         Task<Producto> Register(Producto p);
         Task<List<Producto>> Search(string filter);
         Task<List<Producto>> GetAll();
+        Task<List<Producto>> GetByPage(int i);
         Task<List<Producto>> GetAll(Categoria c);
         Task<List<Producto>> GetAll(Subcategoria s);
         Task<Producto> GetById(string id);
@@ -96,6 +97,21 @@ namespace fan_07.Services
                 return null;
             }
             
+        }
+
+        public async Task<List<Producto>> GetByPage(int i)
+        {
+            const int maxCount = 12;
+
+            return await dbContext.Productos
+                .Include(p => p.Imagenes)
+                .Include(p => p.Subcategoria)
+                .ThenInclude(s => s.Categoria)
+                .Select(p => p)
+                .OrderBy(p => p.Nombre)
+                .Skip(maxCount * (i - 1))
+                .Take(maxCount)
+                .ToListAsync();
         }
 
         public async Task<List<string>> GetImages(Producto producto)

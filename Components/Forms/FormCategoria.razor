@@ -60,18 +60,16 @@
   private string _Subcategoria = String.Empty;
   protected override void OnParametersSet()
   {
+    _Rows = new List<string[]>();
     if (Categoria == null)
     {
       Categoria = new Categoria();
-      _Rows = new List<string[]>();
     }
     else{
       _Exists = true;
       if (Categoria.Subcategorias != null && Categoria.Subcategorias.Count > 0)
         foreach (var sc in Categoria.Subcategorias)
           _Rows.Add(new string[] {$"{sc.Nombre}"});
-      else
-        _Rows = new List<string[]>();
     }
   }
 

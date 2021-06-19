@@ -1,5 +1,6 @@
-@page "/hub/productos/registrar"
+@page "/hub/productos/registro"
 @page "/hub/productos/{id}"
+@page "/hub/productos/{id}/edit"
 @inject IProductService PrdtSrv
 
 <FormProducto @ref="form" Producto="@producto" OnValid="ValidSubmit" />
@@ -17,7 +18,6 @@
   {
     if (id != null && id != String.Empty && id != "registro")
     {
-      Console.WriteLine($"Getting id {id}");
       producto = await PrdtSrv.GetById(id);
     }
     else
