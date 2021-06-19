@@ -4,12 +4,24 @@
 @inject NavigationManager NavMgr
 @inject IProductService PrdtSrv
 
-<FormProducto @ref="form" Producto="@producto" OnValid="ValidSubmit" />
+<main>
+  <div class="level">
+    <h1 class="title level-item">Productos</h1>
+  </div>
+  <div class="columns">
+    <div class="column is-2"></div>
+    <div class="column">
+      <FormProducto @ref="form" _Exists="@edit" Producto="@producto" OnValid="ValidSubmit" />
+    </div>
+    <div class="column is-2"></div>
+  </div>
+</main>
 
 @code{
   [Parameter] public string id {get; set;}
   private FormProducto form;
   private Producto producto;
+  private bool edit;
   private async Task ValidSubmit()
   {
     Console.WriteLine($"Product form submitted");
@@ -20,7 +32,7 @@
     if (id != null && id != String.Empty && id != "registro")
     {
       producto = await PrdtSrv.GetById(id);
-      form._Exists = !(producto != null && NavMgr.Uri.ToString().Contains("edit"));
+      edit = !(producto != null && NavMgr.Uri.ToString().Contains("/edit"));
     }
     else
       producto = new Producto();

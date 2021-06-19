@@ -4,8 +4,18 @@
 @inject NavigationManager NavMgr
 @inject ICategoryService CatSrv
 
-<h1 class="title">Categoría</h1>
-<FormCategoria @ref="categoria" Categoria="_Categoria" OnValid="() => Test()" />
+<main>
+  <div class="level">
+    <h1 class="title level-item">Categoría</h1>
+  </div>
+  <div class="columns">
+    <div class="column is-2"></div>
+    <div class="column">
+      <FormCategoria @ref="categoria" _Exists="@_Exists" Categoria="_Categoria" OnValid="() => Test()" />
+    </div>
+    <div class="column is-2"></div>
+  </div>
+</main>
 
 @code{
   [Parameter] public string id {get; set;}
@@ -24,20 +34,19 @@
       if (_Categoria != null)
       {
         var s = await CatSrv.GetSubcategories(_Categoria);
-        //var s = _Categoria.Subcategorias;
+
         if (s != null && s.Count > 0)
           _Subcategorias = s.ToList();
         else
           _Subcategorias = new List<Subcategoria>();
       }
       _Categoria.Subcategorias = _Subcategorias;
+      _Exists = !(NavMgr.Uri.ToString().Contains("/edit"));
     } else {
       _Categoria = new Categoria();
       _Subcategorias = new List<Subcategoria>();
       _Categoria.Subcategorias = _Subcategorias;
     }
-
-    categoria._Exists = !(_Exists && NavMgr.Uri.ToString().Contains("edit"));
   }
   private async Task Test()
   {

@@ -1,4 +1,5 @@
 @implements IForm
+@inject NavigationManager NavMgr
 
 <EditForm
   Model="@pago"
@@ -37,13 +38,17 @@
         <button type="submit" class="button is-success">Aceptar</button>
       </div>
       <div class="control">
-        <button class="button is-danger is-light">Cancelar</button>
+        <button class="button is-danger is-light" @onclick="CancelOperation">Cancelar</button>
       </div>
     </div>
   </fieldset>
 </EditForm>
 
 @code{
+  private void CancelOperation()
+  {
+    NavMgr.NavigateTo("/hub", true);
+  }
   [Parameter] public Pago pago {get; set;}
   [Parameter] public EventCallback OnValid {get; set;}
   public bool _Exists = false;

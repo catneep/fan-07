@@ -1,4 +1,3 @@
-@using System.IO
 @inject NavigationManager NavMgr
 @implements IForm
 @inject ICategoryService CatSrv
@@ -106,13 +105,17 @@
         <button type="submit" class="button is-success">Aceptar</button>
       </div>
       <div class="control">
-        <button class="button is-danger is-light">Cancelar</button>
+        <button class="button is-danger is-light" @onclick="CancelOperation">Cancelar</button>
       </div>
     </div>
   </fieldset>
 </EditForm>
 
 @code{
+  private void CancelOperation()
+  {
+    NavMgr.NavigateTo("/hub", true);
+  }
   [Parameter] public Producto Producto {get; set;}
   [Parameter] public EventCallback OnValid {get; set;}
   private List<ImagenProducto> ImagenesProducto;
@@ -120,7 +123,7 @@
   private List<Subcategoria> Subcategorias;
   private Categoria _currentCategory;
   private Subcategoria _currentSubcategory;
-  public bool _Exists = false;
+  [Parameter] public bool _Exists {get; set;} = false;
   private double _Precio = 0;
   private async Task ChangeCategory(ChangeEventArgs e)
   {
@@ -153,18 +156,9 @@
     }
     else
     {
-      _Exists = await PrdtSrv.Exists(Producto);
-      if (_Exists)
-      {
-        _currentCategory = await CatSrv.GetForProduct(Producto);
-        await GetSubcategories(_currentCategory);
-      }
-      else
-      {
-        _currentCategory = Categorias[0];
-        await GetSubcategories(_currentCategory);
-      }
+      _currentCategory = await CatSrv.GetForProduct(Producto);
     }
+    await GetSubcategories(_currentCategory);
   }
   public Task Invalid()
   {

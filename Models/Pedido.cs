@@ -13,7 +13,6 @@ namespace fan_07.Models
         [MinLength(10,ErrorMessage="Ingresa una fecha en formato DD/MM/AAAA")]
         public DateTime Fecha { get; set; } = DateTime.Now;
         public ApplicationUser Usuario { get; set; }
-        
         public Envio Envio { get; set; } = null;
         [MinLength(25,ErrorMessage="Ingresa un domicilio mayor a 25 caracteres y menor a 500"),MaxLength(500)]
         public string Direccion { get; set; }

@@ -15,13 +15,13 @@
   <tbody>
     @for (int i = 0; i < Pedidos.Count; i++)
     {
-      var index = i;
+      int index = i;
       <tr>
         <td>
-          @(index + 1)
+          @(i + 1)
         </td>
         <td>
-          @Pedidos[index].Fecha
+          @Pedidos[index].Fecha.ToString().Substring(0, 11)
         </td>
         <td>
           @Pedidos[index].Productos.Count
@@ -62,9 +62,15 @@
 @code{
   [Parameter] public List<Pedido> Pedidos {get; set;}
   [Parameter] public EventCallback<Pedido> DeleteHandler {get; set;}
-  private string GetStatus(int i)
+
+  protected override void OnParametersSet()
   {
-    switch (i){
+    if (Pedidos != null && Pedidos.Count > 0)
+      Console.WriteLine($"Initialized with {Pedidos.Count} orders");
+  }
+  private string GetStatus(int status)
+  {
+    switch (status){
       default:
       case 0:
         return "Pendiente de recolección";

@@ -8,36 +8,53 @@
 
 @inject NavigationManager NavMgr
 
-<section class="hero is-halfheight">
+<section class="hero is-halfheight" style="background-image: url(/img/stonks.png); background-size: cover;">
   <div class="hero-body">
     <div>
-      <p class="title">
-        Administración Fan-07
+      <p class="title" style="color: white; text-shadow: 5px 5px 5px black;">
+        Panel de Administrador
       </p>
     </div>
   </div>
 </section>
 
-<h1 class="title">Categorias</h1>
-<TableCategorias Categorias="@Categorias" DeleteHandler="DeleteCategory" />
-<a class="button is-primary" href="/hub/categorias/registro">
-  Agregar
-</a>
+<div class="columns" style="margin-top: 2rem;">
+  <div class="column is-2"></div>
+  <div class="column">
+    <div class="box">
+      <h1 class="title">Categorias</h1>
+      <TableCategorias Categorias="@Categorias" DeleteHandler="DeleteCategory" />
+      <a class="button is-primary" href="/hub/categorias/registro">
+        Agregar
+      </a>
+    </div>
 
-<h1 class="title">Productos</h1>
-<TableProductos Productos="@Productos" DeleteHandler="DeleteProduct" />
-<a class="button is-primary" href="/hub/productos/registro">
-  Agregar
-</a>
+    <div class="box">
+      <h1 class="title">Productos</h1>
+      <TableProductos Productos="@Productos" DeleteHandler="DeleteProduct" />
+      <a class="button is-primary" href="/hub/productos/registro">
+        Agregar
+      </a>
+    </div>
 
-<h1 class="title">Pedidos</h1>
-<TablePedidos Pedidos="@Pedidos" DeleteHandler="DeletePedido" />
-<a class="button is-primary" href="/hub/pedidos/registro">
-  Agregar
-</a>
+    <div class="box">
+      <h1 class="title">Pedidos</h1>
+      <TablePedidos Pedidos="@Pedidos" DeleteHandler="DeletePedido" />
+      <a class="button is-primary" href="/hub/pedidos/registro">
+        Agregar
+      </a>
+    </div>
 
-<h1 class="title">Distribuidores</h1>
-<!--TODO-->
+    <div class="box">
+      <h1 class="title">Distribuidores</h1>
+      <!--TODO-->
+    </div>
+
+  </div>
+  <div class="column is-2"></div>
+</div>
+
+<FanFooter />
 
 <Embers.Bulma.Modal @ref="deleteDialog">
   <div class="box content has-text-centered">

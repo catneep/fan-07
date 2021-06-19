@@ -107,8 +107,14 @@ namespace fan_07.Services
         public async Task<List<Pedido>> GetPedidos()
         {
             return await dbContext.Pedidos
+                .Select(p => p)
                 .Include(p => p.Envio)
                 .ThenInclude(e => e.Distribuidor)
+                .Include(p => p.Productos)
+                .ThenInclude(pr => pr.Imagenes)
+                .Include(p => p.Productos)
+                .ThenInclude(pr => pr.Subcategoria)
+                .ThenInclude(s => s.Categoria)
                 .ToListAsync();
         }
 

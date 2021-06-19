@@ -78,3 +78,23 @@ fieldset{
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.is-zoomable{
+    transition: 0.3s ease-in-out;
+}
+
+.is-zoomable:hover{
+    transform: scale(1.2);
+}
+
+.card > .card-image{
+    overflow: hidden;
+}
+
+.card-image > .image > img{
+    transition: 0.3s ease-in-out;
+}
+
+.card-image > .image > img:hover{
+    transform: scale(1.2);
+}
