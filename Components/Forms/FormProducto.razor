@@ -12,12 +12,13 @@
   <ValidationSummary />
 
   <fieldset disabled="@_Exists">
-    <div class="field">
+    <div class="lahoja">
+      <div class="field">
       <label class="label">Nombre</label>
       <div class="control has-icons-right">
         <input
           required
-          class="input"
+          class="input" 
           type="text"
           placeholder="Nombre"
           @bind-value="Producto.Nombre">
@@ -109,6 +110,8 @@
         <button class="button is-danger is-light">Cancelar</button>
       </div>
     </div>
+
+    </div>    
   </fieldset>
 </EditForm>
 

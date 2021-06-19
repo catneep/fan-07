@@ -4,7 +4,16 @@
 @inject NavigationManager NavMgr
 @inject IProductService PrdtSrv
 
-<FormProducto @ref="form" Producto="@producto" OnValid="ValidSubmit" />
+
+<main>
+    <div class="main_content">      
+      <div class="container">
+        <h1 class="title" style="text-align: center;">Agregar Producto</h1>
+        <FormProducto @ref="form" Producto="@producto" OnValid="ValidSubmit" />
+      </div>      
+    </div>  
+</main>
+
 
 @code{
   [Parameter] public string id {get; set;}

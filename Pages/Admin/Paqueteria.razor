@@ -3,21 +3,47 @@
 
 @*Edición de categoría existente*@
 @page "/hub/paqueterias/{id}"
+@page "/hub/paqueterias/{id}/edit"
+
+@inject IMailingService Mailsrv
+@inject NavigationManager Navman
+
 
 <main>
-  <h1>Titulo</h1>
-  <div class="columns">
-    <div class="column is-2"></div>
-    <div class="column">
-      
-    </div>
-    <div class="column is-2"></div>
-  </div>
+    <div class="main_content">      
+      <div class="container">
+        <h1 class="title" style="text-align: center;">Agregar Paqueteria</h1>
+        <FormPaqueteria @ref="fp" Distribuidor="@Distribuidor" OnValid="Test" />
+      </div>      
+    </div>  
 </main>
 
+
+
+
 @code{
-  private Direccion direccion;
-  private void Test(){
+  public Distribuidor Distribuidor { get; set; }
+
+  [Parameter] public string id { get; set; }
+
+  private FormPaqueteria fp;
+
+  private Distribuidor paq;
+  private async Task Test(){
     Console.WriteLine($"Hey");
+    await Mailsrv.RegisterDistribuidor(Distribuidor);
+    return;
   }
+
+  protected override async Task OnParametersSetAsync(){
+    if (id != null && id != String.Empty && id != "registro")
+    {        
+      paq = await Mailsrv.GetDistribuidor(id);
+      fp._Exists = !(paq != null && Navman.Uri.ToString().Contains("edit"));
+      
+    } else{
+      paq = new Distribuidor();
+    }
+  }  
+
 }

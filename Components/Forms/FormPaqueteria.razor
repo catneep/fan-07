@@ -1,0 +1,121 @@
+@implements IForm
+
+<EditForm
+  Model="@Distribuidor"
+  OnInvalidSubmit="@Invalid"
+  OnValidSubmit="@Valid">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <fieldset disabled="@_Exists">
+    <div class="lahoja">
+      <label class="label">Nombre Paqueteria:</label>
+      <div class="field">            
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Nombre Paqueteria"
+          @bind-value="Distribuidor.Nombre">
+      </div>
+    </div>                
+
+    <label class="label">Correo:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="ivan@gmail.com"
+          @bind-value="Distribuidor.Correo">
+      </div>
+    </div>
+    
+    <label class="label">Telefono:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="55-555-5555"
+          @bind-value="Distribuidor.Telefono">
+      </div>
+    </div>
+
+    <label class="label">Costo:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="$$$"
+          @bind-value="Distribuidor.Costo">
+      </div>
+    </div>
+
+    <label class="label">Dias de Entrega:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="5"
+          @bind-value="Dias">
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button type="submit" class="button is-success">Aceptar</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger is-light">Cancelar</button>
+      </div>
+    </div>
+    </div>
+  </fieldset>
+</EditForm>
+
+@code{
+
+private string NombrePaqueteria, Correo, Telefono, Costo, Dias;
+
+[Parameter] public EventCallback OnValid {get; set;}
+
+[Parameter] public Distribuidor Distribuidor {get; set;}
+
+public bool _Exists = false;
+
+protected override void OnParametersSet()
+  {
+    if (Distribuidor == null)
+      Distribuidor = new Distribuidor();
+    else 
+      _Exists = true;
+
+  }
+
+    public Task Invalid()
+  {
+    //TODO: Display error messages
+    Console.WriteLine($"Form not valid!");
+    return Task.FromResult<bool>(true);
+  }
+
+  public async Task Valid()
+  {
+    Console.WriteLine($"Submitting form...");
+    string ext = String.Empty;
+    if (NombrePaqueteria != null){
+      ext = $", ext. {NombrePaqueteria}";    
+    }
+      
+    await OnValid.InvokeAsync();
+  }
+
+}

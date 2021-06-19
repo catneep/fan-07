@@ -1,0 +1,19 @@
+    
+  .main_content{
+    top: auto;
+    left: auto;
+    width: auto;
+    min-height: 750px;
+    height: auto;
+    background-color: #61A5C2;
+    position: relative;
+  
+  }
+
+  .container{
+    width: 640px; /* Can be in percentage also. */
+    height: auto;
+    margin: auto;
+    padding: 10px;
+    position: relative;
+  }
