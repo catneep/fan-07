@@ -1,0 +1,75 @@
+@inject NavigationManager NavMgr
+
+<table class="table is-striped is-narrow is-hoverable is-fullwidth">
+    <thead>
+    <tr>
+      <th><!-- # --></th>
+      <th>Nombre</th>
+      <th>Correo</th>
+      <th>Telefono</th>      
+    </tr>
+  </thead>
+  <tbody>
+      @for (int i = 0; i < Paqueterias.Count; i++)
+      {
+        var index = i;
+        <tr>
+            <td>
+                @(index + 1)
+            </td>
+            <td>
+                @Paqueterias[index].Nombre
+            </td>
+            <td>
+                @Paqueterias[index].Correo
+            </td>
+            <td>
+                @Paqueterias[index].Telefono
+            </td>
+            <td>
+                <div class="buttons">
+                    <button class="button is-info is-inverted is-small"
+                    @onclick="() => Go(Paqueterias[index])">
+                        <span class="oi" data-glyph="eye" /> 
+                        Ver Detalles
+                    </button>
+                    <button class="button is-info is-inverted is-small"
+                    @onclick="() => Edit(Paqueterias[index])">
+                        <span class="oi" data-glyph="pencil" /> 
+                        Editar
+                    </button>
+                    <button class="button is-danger is-small"
+                    @onclick="() => Delete(Paqueterias[index])">
+                        <span class="oi" data-glyph="trash" /> 
+                        Eliminar
+                    </button>
+
+                </div>
+            </td>
+        </tr>
+      }
+  </tbody>
+</table>
+
+
+
+@code{
+  [Parameter] public List<Distribuidor> Paqueterias {get; set;}
+  [Parameter] public EventCallback<Distribuidor> DeleteHandler {get; set;}
+
+  private void Go(Distribuidor c)
+  {
+    NavMgr.NavigateTo($"/hub/paqueterias/{c.Id}");
+  }
+
+  private void Edit(Distribuidor c)
+  {
+    NavMgr.NavigateTo($"/hub/paqueterias/{c.Id}/edit");
+  }
+
+  private async void Delete(Distribuidor c)
+  {
+    await DeleteHandler.InvokeAsync(c);
+  }
+
+}
