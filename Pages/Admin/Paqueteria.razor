@@ -2,22 +2,52 @@
 @page "/hub/paqueterias/registro"
 
 @*Edición de categoría existente*@
+@page "/hub/paqueterias/{id}"
+@page "/hub/paqueterias/{id}/edit"
+
+@inject IMailingService Mailsrv
+@inject NavigationManager Navman
 
 
 <main>
-  <h1>Paqueteria</h1>
-  <div class="columns">
-    <div class="column is-2"></div>
-    <div class="column">
-      <FormPaqueteria Distribuidor="@Distribuidor" OnValid="Test" />
+  <body style="background-color: #89C2D9;">
+    <div class="columns container">
+      <div class="column is-2"></div>
+      <div class="column">
+        <h1>Agregar Paqueteria</h1>
+        <FormPaqueteria @ref="fp" Distribuidor="@Distribuidor" OnValid="Test" />
+      </div>
+      <div class="column is-2"></div>
     </div>
-    <div class="column is-2"></div>
-  </div>
+  </body>  
 </main>
 
+
+
+
 @code{
-  private Distribuidor Distribuidor;
-  private void Test(){
+  public Distribuidor Distribuidor { get; set; }
+
+  [Parameter] public string id { get; set; }
+
+  private FormPaqueteria fp;
+  private async Task Test(){
     Console.WriteLine($"Hey");
+    await Mailsrv.RegisterDistribuidor(Distribuidor);
+    return;
   }
+
+  protected override async Task OnParametersSetAsync(){
+    if (id != null && id != String.Empty)
+    {        
+      this.Distribuidor = await Mailsrv.GetDistribuidor(id);
+    } else{
+      this.Distribuidor= new Distribuidor();
+    }
+  }
+
+  protected override void OnInitialized(){
+    fp._Exists = !(Navman.Uri.ToString().Contains("edit"));
+  }
+
 }

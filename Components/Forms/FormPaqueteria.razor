@@ -7,104 +7,103 @@
   <DataAnnotationsValidator />
   <ValidationSummary />
 
-  <fieldset>
-    <div class="field">
-      <label class="label">Nombre Paqueteria</label>
+  <fieldset disabled="@_Exists">
+    <div class="lahoja">
+      <label class="label">Nombre Paqueteria:</label>
+      <div class="field">            
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="Nombre Paqueteria"
-          @bind="NombrePaqueteria">
+          @bind-value="Distribuidor.NombrePaqueteria">
       </div>
     </div>
 
-    <label class="label">RFC</label>
-    <div class="field is-grouped">
+    <label class="label">RFC:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="RFC"
-          @bind="RFC">
+          @bind-value="Distribuidor.RFC">
       </div>
     </div>
 
-    <label class="label">URL</label>
-    <div class="field is-grouped">
+    <label class="label">URL:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="www.fedex.com.mx"
-          @bind="URL">
+          @bind-value="Distribuidor.URL">
       </div>
     </div>
     
-    <label class="label">Nombre del Responsable</label>
-    <div class="field is-grouped">
+    <label class="label">Nombre del Responsable:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="Nombre Responsable"
-          @bind="NombreResponsable">
+          @bind-value="Distribuidor.NombreResponsable">
       </div>
     </div>
 
-    <label class="label">Correo</label>
-    <div class="field is-grouped">
+    <label class="label">Correo:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="ivan@gmail.com"
-          @bind="Correo">
+          @bind-value="Distribuidor.Correo">
       </div>
     </div>
     
-    <label class="label">Telefono</label>
-    <div class="field is-grouped">
+    <label class="label">Telefono:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="55-555-5555"
-          @bind="Telefono">
+          @bind-value="Distribuidor.Telefono">
       </div>
     </div>
 
-    <label class="label">Costo</label>
-    <div class="field is-grouped">
+    <label class="label">Costo:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="$$$"
-          @bind="Costo">
+          @bind-value="Distribuidor.Costo">
       </div>
     </div>
 
-    <label class="label">Dias de Entrega</label>
-    <div class="field is-grouped">
+    <label class="label">Dias de Entrega:</label>
+    <div class="field">
       <div class="control has-icons-right">
         <input
           required
           class="input"
           type="text"
           placeholder="5"
-          @bind="Dias">
+          @bind-value="Dias">
       </div>
     </div>
-
-
 
     <div class="field is-grouped">
       <div class="control">
@@ -113,6 +112,7 @@
       <div class="control">
         <button class="button is-danger is-light">Cancelar</button>
       </div>
+    </div>
     </div>
   </fieldset>
 </EditForm>
@@ -125,10 +125,15 @@ private string NombrePaqueteria, RFC, URL, NombreResponsable, Correo, Telefono, 
 
 [Parameter] public Distribuidor Distribuidor {get; set;}
 
+public bool _Exists = false;
+
 protected override void OnParametersSet()
   {
     if (Distribuidor == null)
       Distribuidor = new Distribuidor();
+    else 
+      _Exists = true;
+
   }
 
     public Task Invalid()
@@ -142,8 +147,10 @@ protected override void OnParametersSet()
   {
     Console.WriteLine($"Submitting form...");
     string ext = String.Empty;
-    if (NombrePaqueteria != null && NombreResponsable != String.Empty)
+    if (NombrePaqueteria != null && NombreResponsable != String.Empty){
       ext = $", ext. {NombrePaqueteria}";    
+    }
+      
     await OnValid.InvokeAsync();
   }
 
