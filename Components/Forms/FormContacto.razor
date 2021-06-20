@@ -1,0 +1,101 @@
+@implements IForm
+
+<EditForm
+  Model="@Contact"
+  OnInvalidSubmit="@Invalid"
+  OnValidSubmit="@Valid">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <fieldset disabled="@_Exists">
+    <div class="lahoja">
+      <label class="label">Nombre:</label>
+      <div class="field">            
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Nombre(s):"
+          @bind-value="Contact.Nombre">
+      </div>
+    </div>                
+
+    <label class="label">Apellido Paterno:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="Apellidos"
+          @bind-value="Contact.ApellidoPaterno">
+      </div>
+    </div>
+    
+    <label class="label">Correo:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <input
+          required
+          class="input"
+          type="text"
+          placeholder="correo@correo.com"
+          @bind-value="Contact.Correo">
+      </div>
+    </div>
+
+    <label class="label">Mensaje:</label>
+    <div class="field">
+      <div class="control has-icons-right">
+        <textarea
+          class="textarea"
+          placeholder="Ingresa el mensaje:"
+          @bind="Contact.Mensaje"
+          ></textarea>
+      </div>
+    </div>    
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button type="submit" class="button is-success">Enviar</button>
+      </div>    
+    </div>
+    </div>
+  </fieldset>
+</EditForm>
+
+@code{
+private string Nombre, ApellidoPaterno, Correo, Mensaje;
+
+[Parameter] public EventCallback OnValid {get; set;}
+
+[Parameter] public Contact Contact {get; set;}
+
+public bool _Exists = false;
+
+protected override void OnParametersSet()
+  {
+    if (Contact == null)
+      Contact = new Contact();
+    else 
+      _Exists = true;
+
+  }
+
+    public Task Invalid()
+  {
+    //TODO: Display error messages
+    Console.WriteLine($"Form not valid!");
+    return Task.FromResult<bool>(true);
+  }
+
+  public async Task Valid()
+  {
+    Console.WriteLine($"Submitting form...");
+    string ext = String.Empty;          
+    await OnValid.InvokeAsync();
+  }
+
+
+}

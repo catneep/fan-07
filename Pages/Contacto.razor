@@ -1,0 +1,21 @@
+@page "/contacto/"
+
+@inject IMailingService Mailsrv
+
+<main>
+    <div class="main_content">      
+      <div class="container">
+        <h1 class="title" style="text-align: center;">¡Tu opinion es importante!</h1>
+        <FormContacto Contact="@Contact" OnValid="Test" />        
+      </div>      
+    </div>  
+</main>
+
+@code{
+    public Contact Contact { get; set; }
+
+    private async Task Test(){
+    Console.WriteLine($"Hey");    
+    return;
+  }
+}
