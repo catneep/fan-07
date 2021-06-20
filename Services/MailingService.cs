@@ -36,6 +36,7 @@ namespace fan_07.Services
         }
         public async Task<Pedido> Create(Pedido pedido)
         {
+            //TODO: Cambiar por objeto con distribuidor asignado
             var distTemp = new Distribuidor{
                 Nombre = "Estafeta",
                 Correo = "a@a.com",
@@ -52,14 +53,19 @@ namespace fan_07.Services
             var list = new List<Producto>();
             foreach (var i in pedido.Productos)
             {
-                list.Add(
-                    await dbContext.Productos.Where(p => p.Id == i.Id)
+                Producto productoTemp =
+                await dbContext.Productos.Where(p => p.Id == i.Id)
                     .Include(p => p.Imagenes)
                     .Include(p => p.Subcategoria)
                     .ThenInclude(s => s.Categoria)
-                    .FirstAsync()
-                );
+                    .FirstAsync();
+
+                productoTemp.Existencia--;
+                dbContext.Productos.Update(productoTemp);
+
+                list.Add(productoTemp);
             }
+            
             pedido.Productos = list;
 
             await dbContext.Pedidos.AddAsync(pedido);

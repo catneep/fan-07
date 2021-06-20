@@ -62,8 +62,11 @@
   {
     Console.WriteLine($"It was valid!\nRegistering...");
     _Categoria = form.Categoria;
-    await CatSrv.CreateCategory(_Categoria);
-    
+    if (await CatSrv.Exists(_Categoria))
+      await CatSrv.ModifyCategory(_Categoria);
+    else
+      await CatSrv.CreateCategory(_Categoria);
+
     modalSuccess.makeVisible();
   }
 }

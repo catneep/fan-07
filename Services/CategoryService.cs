@@ -12,6 +12,8 @@ namespace fan_07.Services
 {
     public interface ICategoryService
     {
+        Task<bool> Exists(Categoria c);
+        Task<bool> Exists(Subcategoria s);
         Task<Categoria> GetForProduct(Producto producto);
         Task<Categoria> GetCategory(string id);
         Task<Categoria> GetCategoryByName(string name);
@@ -57,6 +59,18 @@ namespace fan_07.Services
             dbContext.Subcategorias.Remove(subcategoria);
             await dbContext.SaveChangesAsync();
             return subcategoria;
+        }
+
+        public async Task<bool> Exists(Categoria cat)
+        {
+            return await
+                dbContext.Categorias.AnyAsync(c => c.Id == cat.Id);
+        }
+
+        public async Task<bool> Exists(Subcategoria sub)
+        {
+            return await
+                dbContext.Subcategorias.AnyAsync(s => s.Id == sub.Id);
         }
 
         public async Task<ICollection<Categoria>> GetCategories()

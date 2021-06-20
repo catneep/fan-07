@@ -166,12 +166,17 @@
     {
       Producto = new Producto();
       _currentCategory = Categorias[0];
-      _Precio = (double) Producto.Precio;
+
+      _Precio = 0;
     }
     else
-        _currentCategory = await CatSrv.GetForProduct(Producto);
+    {
+      _currentCategory = await CatSrv.GetForProduct(Producto);
+      _Precio = (double) Producto.Precio;
+    }
 
     await GetSubcategories(_currentCategory);
+    Producto.Subcategoria = Subcategorias[0];
   }
   public Task Invalid()
   {
@@ -183,6 +188,7 @@
   {
     Console.WriteLine($"Submitting form...");
     Producto.Subcategoria = _currentSubcategory;
+    //Console.WriteLine($"Subcategory: {Producto.Subcategoria.Id}");
     Producto.Precio = new decimal(_Precio);
     Producto.Imagenes = ImagenesProducto;
     await OnValid.InvokeAsync();

@@ -35,9 +35,14 @@
   private async Task ValidSubmit()
   {
     Console.WriteLine($"Product form submitted");
+
     producto = form.Producto;
+    if (await PrdtSrv.Exists(producto))
+      await PrdtSrv.Modify(producto);
+    else
+      await PrdtSrv.Register(producto);
+    
     modalSuccess.makeVisible();
-    await PrdtSrv.Register(producto);
   }
   protected async override Task OnParametersSetAsync()
   {
