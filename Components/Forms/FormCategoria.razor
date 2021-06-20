@@ -21,36 +21,53 @@
       </div>
     </div>
 
-    <label class="label">Nueva Subcategoría</label>
-    <div class="field is-grouped">
-      <div class="control has-icons-right">
-        <input
-          required
-          class="input"
-          type="text"
-          placeholder="Subcategoría"
-          @bind="_Subcategoria">
+    @if (!_Exists)
+    {
+      <label class="label">Nueva Subcategoría</label>
+      <div class="field is-grouped">
+        <div class="control has-icons-right">
+          <input
+            class="input"
+            type="text"
+            placeholder="Subcategoría"
+            @bind="_Subcategoria">
+        </div>
+        <div class="control">
+          <button type="button" class="button is-primary" @onclick="() => AddSub(_Subcategoria)">Agregar</button>
+        </div>
       </div>
-      <div class="control">
-        <button type="button" class="button is-primary" @onclick="() => AddSub(_Subcategoria)">Agregar</button>
-      </div>
-    </div>
+    }
 
     <Embers.Bulma.Table
       Headers="@_Headers"
       Rows="@_Rows"
     />
 
-    <div class="field is-grouped">
-      <div class="control">
-        <button type="submit" class="button is-success">Aceptar</button>
+    @if (!_Exists)
+    {
+      <div class="field is-grouped">
+        <div class="control">
+          <button type="submit" class="button is-success">
+            Aceptar
+          </button>
+        </div>
+        <div class="control">
+          <button class="button is-danger is-light" @onclick="CancelOperation">
+            Cancelar
+          </button>
+        </div>
       </div>
-      <div class="control">
-        <button class="button is-danger is-light" @onclick="CancelOperation">Cancelar</button>
-      </div>
-    </div>
+    }
   </fieldset>
 </EditForm>
+@if (_Exists)
+{
+  <div class="control">
+    <button class="button is-link" @onclick="CancelOperation">
+      Regresar
+    </button>
+  </div>
+}
 
 @code{
   private void CancelOperation()
@@ -110,16 +127,7 @@
 
   public async Task Valid()
   {
-    Console.WriteLine($"Submitting form...");
-    Console.WriteLine($"Categoría: {Categoria.Nombre}");
-    Console.WriteLine($"Subcategorías: {Categoria.Subcategorias.Count}");
-    foreach (var sub in Categoria.Subcategorias)
-    {
-      Console.WriteLine($"\t -{sub.Id.ToString()}: {sub.Nombre}");
-    }
     await OnValid.InvokeAsync();
-    EmptyFields();
-    //return Task.FromResult<bool>(true);
   }
 
 }

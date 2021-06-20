@@ -17,14 +17,26 @@
   </div>
 </main>
 
+<Embers.Bulma.Modal @ref="modalSuccess">
+  <div class="notification is-primary content">
+    <p>
+      ¡Tu Registro fue añadido exitosamente!
+      Puedes ver tus cambios <a href="/hub">aquí</a>.
+    </p>
+  </div>
+</Embers.Bulma.Modal>
+
 @code{
   [Parameter] public string id {get; set;}
   private FormProducto form;
+  private Modal modalSuccess;
   private Producto producto;
   private bool edit;
   private async Task ValidSubmit()
   {
     Console.WriteLine($"Product form submitted");
+    producto = form.Producto;
+    modalSuccess.makeVisible();
     await PrdtSrv.Register(producto);
   }
   protected async override Task OnParametersSetAsync()

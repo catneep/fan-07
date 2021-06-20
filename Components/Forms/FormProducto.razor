@@ -45,7 +45,7 @@
         <input
           class="input"
           type="number"
-          min="0.50"
+          min="0"
           placeholder="0"
           @bind="_Precio">
         <span class="oi icon is-small is-left" data-glyph="dollar"></span>
@@ -69,6 +69,7 @@
       <div class="control">
         <div class="select">
           <select @onchange="ChangeCategory">
+            
             @foreach (var c in Categorias)
             {
               <option value="@c.Nombre">
@@ -87,6 +88,7 @@
         <div class="control">
           <div class="select">
             <select @onchange="ChangeSubcategory">
+              
               @foreach (var s in Subcategorias)
               {
                 <option
@@ -100,16 +102,27 @@
       </div>
     }
 
-    <div class="field is-grouped">
-      <div class="control">
-        <button type="submit" class="button is-success">Aceptar</button>
+    @if (!_Exists)
+    {
+      <div class="field is-grouped">
+        <div class="control">
+          <button type="submit" class="button is-success">Aceptar</button>
+        </div>
+        <div class="control">
+          <button class="button is-danger is-light" @onclick="CancelOperation">Cancelar</button>
+        </div>
       </div>
-      <div class="control">
-        <button class="button is-danger is-light" @onclick="CancelOperation">Cancelar</button>
-      </div>
-    </div>
+    }
   </fieldset>
 </EditForm>
+@if (_Exists)
+{
+  <div class="control">
+    <button class="button is-link" @onclick="CancelOperation">
+      Regresar
+    </button>
+  </div>
+}
 
 @code{
   private void CancelOperation()
@@ -118,12 +131,12 @@
   }
   [Parameter] public Producto Producto {get; set;}
   [Parameter] public EventCallback OnValid {get; set;}
+  [Parameter] public bool _Exists {get; set;} = false;
   private List<ImagenProducto> ImagenesProducto;
   private List<Categoria> Categorias;
   private List<Subcategoria> Subcategorias;
   private Categoria _currentCategory;
   private Subcategoria _currentSubcategory;
-  [Parameter] public bool _Exists {get; set;} = false;
   private double _Precio = 0;
   private async Task ChangeCategory(ChangeEventArgs e)
   {
@@ -149,15 +162,15 @@
   }
   protected async override Task OnParametersSetAsync()
   {
-    if (Producto == null)
+    if (Producto == null || !(await PrdtSrv.Exists(Producto)))
     {
       Producto = new Producto();
       _currentCategory = Categorias[0];
+      _Precio = (double) Producto.Precio;
     }
     else
-    {
-      _currentCategory = await CatSrv.GetForProduct(Producto);
-    }
+        _currentCategory = await CatSrv.GetForProduct(Producto);
+
     await GetSubcategories(_currentCategory);
   }
   public Task Invalid()
@@ -168,8 +181,6 @@
   }
   public async Task Valid()
   {
-    if (isLoading)
-      return;
     Console.WriteLine($"Submitting form...");
     Producto.Subcategoria = _currentSubcategory;
     Producto.Precio = new decimal(_Precio);
@@ -203,11 +214,11 @@
             Imagen = $"data:{file.ContentType};base64,{base64}"
           }
         );
-        Console.WriteLine($"Loaded: {file.Name} Type: {file.ContentType}");
+        //Console.WriteLine($"Loaded: {file.Name} Type: {file.ContentType}");
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"File: {file.Name} Error: {ex.Message}");
+        //Console.WriteLine($"File: {file.Name} Error: {ex.Message}");
       }
     }
 

@@ -7,8 +7,6 @@ namespace fan_07.Models
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-
-        [MinLength(3,ErrorMessage="Nombre de usuario debe ser mayor a 5 caracteres")]
         public ApplicationUser Usuario { get; set; }
 
         [MaxLength(3,ErrorMessage="Numero debe ser menor a 4 digitos")]

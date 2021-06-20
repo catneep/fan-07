@@ -11,18 +11,28 @@
   <div class="columns">
     <div class="column is-2"></div>
     <div class="column">
-      <FormCategoria @ref="categoria" _Exists="@_Exists" Categoria="_Categoria" OnValid="() => Test()" />
+      <FormCategoria @ref="form" _Exists="@_Exists" Categoria="_Categoria" OnValid="() => Test()" />
     </div>
     <div class="column is-2"></div>
   </div>
 </main>
+
+<Embers.Bulma.Modal @ref="modalSuccess">
+  <div class="notification is-primary content">
+    <p>
+      ¡Tu Registro fue añadido exitosamente!
+      Puedes ver tus cambios <a href="/hub">aquí</a>.
+    </p>
+  </div>
+</Embers.Bulma.Modal>
 
 @code{
   [Parameter] public string id {get; set;}
   private bool _Exists = false;
   private Categoria _Categoria;
   private List<Subcategoria> _Subcategorias;
-  private FormCategoria categoria;
+  private FormCategoria form;
+  private Modal modalSuccess;
   protected override void OnInitialized()
   {
     _Exists = (id != null && id != String.Empty);
@@ -51,7 +61,9 @@
   private async Task Test()
   {
     Console.WriteLine($"It was valid!\nRegistering...");
-    await CatSrv.CreateCategory(categoria.Categoria);
-    NavMgr.NavigateTo("/hub");
+    _Categoria = form.Categoria;
+    await CatSrv.CreateCategory(_Categoria);
+    
+    modalSuccess.makeVisible();
   }
 }

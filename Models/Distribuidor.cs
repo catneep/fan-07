@@ -17,11 +17,9 @@ namespace fan_07.Models
         [MinLength(10,ErrorMessage="Ingresa un telefono de minimo 10 digitos")]
         public string Telefono { get; set; }
 
-        [MinLength(1,ErrorMessage="Ingresa un costo mayor a $1")]
         public decimal Costo { get; set; }
 
         //Dias que tarda en entregar el pedido
-        [MinLength(1,ErrorMessage="Ingresa minimo 1 dia")]
         public int Dias { get; set; }
 
     }

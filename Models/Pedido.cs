@@ -8,9 +8,7 @@ namespace fan_07.Models
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        [MinLength(1,ErrorMessage="Ingrese un total mayor a 1 digito")]
         public decimal Total { get; set; }
-        [MinLength(10,ErrorMessage="Ingresa una fecha en formato DD/MM/AAAA")]
         public DateTime Fecha { get; set; } = DateTime.Now;
         public ApplicationUser Usuario { get; set; }
         public Envio Envio { get; set; } = null;

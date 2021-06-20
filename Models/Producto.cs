@@ -18,14 +18,8 @@ namespace fan_07.Models
 
         [MinLength(10, ErrorMessage="Ingresa una descripcion mayor a 10 caracteres")]
         public string Descripcion { get; set; }
-
-        [MinLength(1,ErrorMessage="Ingresa un precio mayor a $1")]
         public decimal Precio { get; set; }
-
-        [MaxLength(3,ErrorMessage="Las existencias deben ser menores a 999")]
         public int Existencia { get; set; }
-
-        [MinLength(3,ErrorMessage="Nombre de subcategoria debe ser mayor a 3 caracteres")]
         public Subcategoria Subcategoria { get; set; }
 
 

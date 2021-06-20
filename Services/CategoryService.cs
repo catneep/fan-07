@@ -61,33 +61,43 @@ namespace fan_07.Services
 
         public async Task<ICollection<Categoria>> GetCategories()
         {
-            return await dbContext.Categorias.ToListAsync();
+            return await dbContext.Categorias
+            .Include(c => c.Subcategorias)
+            .ToListAsync();
         }
 
         public async Task<Categoria> GetCategory(string id)
         {
-            return await dbContext.Categorias.Where(c => c.Id == Guid.Parse(id)).FirstAsync();
+            return await dbContext.Categorias.Where(c => c.Id == Guid.Parse(id))
+            .Include(c => c.Subcategorias)
+            .FirstAsync();
         }
 
         public async Task<Categoria> GetCategoryByName(string name)
         {
-            return await dbContext.Categorias.Where(c => c.Nombre == name).FirstOrDefaultAsync();
+            return await dbContext.Categorias.Where(c => c.Nombre == name)
+            .Include(c => c.Subcategorias)
+            .FirstOrDefaultAsync();
         }
 
         public async Task<Categoria> GetForProduct(Producto producto)
         {
-            return await dbContext.Categorias.Where(c => c.Id == producto.Subcategoria.Categoria.Id).FirstOrDefaultAsync();
+            return await dbContext.Categorias.Where(c => c.Id == producto.Subcategoria.Categoria.Id)
+            .Include(c => c.Subcategorias)
+            .FirstOrDefaultAsync();
         }
 
         public async Task<ICollection<Subcategoria>> GetSubcategories(Categoria categoria)
         {
-            return await dbContext.Subcategorias.Where(s => s.Categoria.Id == categoria.Id).ToListAsync();
+            return await dbContext.Subcategorias.Where(s => s.Categoria.Id == categoria.Id)
+            .ToListAsync();
         }
 
         public async Task<Subcategoria> GetSubcategoryByName(string name)
         {
             return
-                await dbContext.Subcategorias.Where(s => s.Nombre == name).FirstOrDefaultAsync();
+                await dbContext.Subcategorias.Where(s => s.Nombre == name)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Categoria> ModifyCategory(Categoria categoria)
